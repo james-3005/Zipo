@@ -1,0 +1,17 @@
+@import 'app';
+.container {
+  position: absolute;
+  bottom: 4%;
+  width: 80%;
+  height: 62px;
+  background-color: $default;
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.text {
+  font-size: 16px;
+  font-family: $Mulish-600;
+  color: $offWhite;
+}

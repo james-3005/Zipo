@@ -1,0 +1,45 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.icon {
+  width: 70px;
+  height: 70px;
+}
+.formItem {
+  width: 80%;
+  margin-top: 10px;
+}
+.row {
+  flex-direction: row;
+}
+.textInput {
+  width: 100%;
+  background-color: $offWhite;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: $Mulish-600;
+  color: $body;
+  font-size: 15px;
+}
+.formItemDob {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+}
+.calendar {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  bottom: 0px;
+  justify-content: center;
+}
+.rowCheckBox {
+  flex-direction: row;
+  align-items: center;
+}
+.mgl {
+  margin-left: 35px;
+}

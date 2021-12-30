@@ -1,0 +1,28 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.icon {
+  margin-top: 45%;
+  &_Dimension {
+    width: 70px;
+    height: 70px;
+  }
+}
+.title {
+  font-size: 24px;
+  text-align: center;
+  width: 70%;
+  color: $active;
+  font-family: $Mulish-700;
+  margin-top: 5%;
+  line-height: 30px;
+}
+.policy {
+  position: absolute;
+  bottom: 15%;
+  color: $active;
+  font-family: $Mulish-600;
+}

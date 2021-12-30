@@ -1,0 +1,16 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.centerContainer {
+  margin-top: 25%;
+  justify-content: center;
+  align-items: center;
+}
+.titleText {
+  margin-bottom: 5%;
+  font-size: 24px;
+  font-family: $Mulish-700;
+}

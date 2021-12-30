@@ -1,0 +1,67 @@
+{
+  "name": "zipo",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "crf": "node ./src/utilities/crf.js"
+  },
+  "dependencies": {
+    "@react-native-community/datetimepicker": "^5.1.0",
+    "@react-navigation/bottom-tabs": "^6.0.9",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/stack": "^6.0.11",
+    "moment": "^2.29.1",
+    "node-sass": "^7.0.1",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
+    "react-native-material-ripple": "^0.9.1",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-sass-transformer": "^2.0.0",
+    "react-native-svg": "^12.1.1",
+    "sass": "^1.45.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/react-native": "^0.66.4",
+    "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "eslint": "^7.14.0",
+    "husky": "4",
+    "lint-staged": "^12.1.4",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "prettier": "^2.5.1",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^4.4.4"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,tsx,css,scss}": "prettier --single-quote --trailing-comma all --write"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "@react-native-community",
+    "parserOptions": {
+      "parser": "@typescript-eslint/parser"
+    },
+    "rules": {
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": [
+        "error"
+      ]
+    }
+  }
+}

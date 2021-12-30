@@ -1,0 +1,29 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.title {
+  font-size: 24px;
+  margin-top: 20%;
+  font-family: $Mulish-700;
+}
+.subTitle {
+  line-height: 24px;
+  width: 75%;
+  text-align: center;
+  margin-top: 2%;
+}
+.enterPhoneContainer {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10%;
+  width: 80%;
+}
+.textInput {
+  flex: 1;
+  background-color: $offWhite;
+  border-radius: 4px;
+  padding: 8px;
+}

@@ -1,0 +1,42 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.title {
+  font-size: 24px;
+  font-family: $Mulish-700;
+  margin-top: 20%;
+}
+.subTitle {
+  line-height: 24px;
+  width: 75%;
+  text-align: center;
+  margin-top: 2%;
+}
+.otp {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10%;
+  width: 80%;
+  justify-content: space-evenly;
+}
+.square {
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+.number {
+  font-size: 32px;
+  font-family: $Mulish-700;
+  padding: 0;
+  color: $active;
+}
+.dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: $line;
+}
