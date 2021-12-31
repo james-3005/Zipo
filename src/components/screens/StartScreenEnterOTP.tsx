@@ -10,10 +10,12 @@ import {
 import styles from '../../scss/StartScreenEnterOTP.scss';
 import ButtonBlue from '../atoms/ButtonBlue';
 import Text_ from '../atoms/Text_';
-
+import { connect } from 'react-redux';
+import { reduxState } from '../../redux/reducer';
+import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
 const OS = Platform.OS;
 const OTP = [0, 1, 2, 3];
-export default class StartScreenEnterOTP extends React.Component<
+class StartScreenEnterOTP extends React.Component<
   StartScreenEnterOTPProps,
   StartScreenEnterOTPState
 > {
@@ -29,27 +31,49 @@ export default class StartScreenEnterOTP extends React.Component<
     if (e.length > 4) return;
     this.setState({ otp: e });
   };
+
   focusInput = () => {
+    // @ts-ignore:
     this.inputRef.focus();
   };
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <Text_ style={styles.title}>Enter Code</Text_>
-          <Text_ style={styles.subTitle}>
-            {`We have sent you an SMS with the code to\n +84 ${`1309 - 000 - 100`}`}
-          </Text_>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: this.props.$store.theme
+                ? LIGHT_THEME.THEME
+                : DARK_THEME.THEME,
+            },
+          ]}
+        >
+          <Text_ text={'Enter code'} style={styles.title} />
+          <Text_
+            text={`We have sent you an SMS with the code to\n +84 ${`1309 - 000 - 100`}`}
+            style={styles.subTitle}
+          />
+
           <TouchableWithoutFeedback onPress={this.focusInput}>
             <View style={styles.otp}>
               {OTP.map((item, index) =>
                 this.state.otp[item] ? (
                   <View key={`otp_${index}`} style={styles.square}>
-                    <Text_ style={styles.number}>{this.state.otp[item]}</Text_>
+                    <Text_ text={this.state.otp[item]} style={styles.number} />
                   </View>
                 ) : (
                   <View key={`otp_${index}`} style={styles.square}>
-                    <View style={styles.dot} />
+                    <View
+                      style={[
+                        styles.dot,
+                        {
+                          backgroundColor: this.props.$store.theme
+                            ? LIGHT_THEME.INPUT_COLOR
+                            : DARK_THEME.INPUT_COLOR,
+                        },
+                      ]}
+                    />
                   </View>
                 ),
               )}
@@ -60,8 +84,7 @@ export default class StartScreenEnterOTP extends React.Component<
             style={{ opacity: 0, width: 0, height: 0 }}
             onChangeText={this.changeInput}
             value={this.state.otp}
-            ref={(input) => {
-              /* eslint-disable  @typescript-eslint/no-explicit-any */
+            ref={(input: any) => {
               this.inputRef = input;
             }}
           />
@@ -72,7 +95,16 @@ export default class StartScreenEnterOTP extends React.Component<
   }
 }
 
-export interface StartScreenEnterOTPProps {}
+function mapStateToProps(state: reduxState) {
+  return {
+    $store: state,
+  };
+}
+
+export default connect(mapStateToProps)(StartScreenEnterOTP);
+export interface StartScreenEnterOTPProps {
+  $store: reduxState;
+}
 
 interface StartScreenEnterOTPState {
   otp: String | any;

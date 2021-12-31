@@ -5,7 +5,10 @@ import TopBar from '../molecules/TopBar';
 import Svg from '../../../assets/svg/svg';
 import ButtonWave from '../atoms/ButtonWave';
 import Text_ from '../atoms/Text_';
-export default class MatchingScreen extends React.Component<
+import { connect } from 'react-redux';
+import { reduxState } from '../../redux/reducer';
+import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+class MatchingScreen extends React.Component<
   MatchingScreenProps,
   MatchingScreenState
 > {
@@ -14,17 +17,26 @@ export default class MatchingScreen extends React.Component<
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: this.props.$store.theme
+              ? LIGHT_THEME.THEME
+              : DARK_THEME.THEME,
+          },
+        ]}
+      >
         <TopBar
           rightComponent={
             <View>
-              <Svg.Notification />
+              <Svg.Notification theme={this.props.$store.theme} />
             </View>
           }
           title={'Matching'}
         />
         <View style={styles.centerContainer}>
-          <Text_ style={styles.titleText}>Tap to flirt</Text_>
+          <Text_ style={styles.titleText} text={'Tap to flirt'} />
           <ButtonWave />
         </View>
       </View>
@@ -32,6 +44,15 @@ export default class MatchingScreen extends React.Component<
   }
 }
 
-export interface MatchingScreenProps {}
+function mapStateToProps(state: reduxState) {
+  return {
+    $store: state,
+  };
+}
+
+export default connect(mapStateToProps)(MatchingScreen);
+export interface MatchingScreenProps {
+  $store: reduxState;
+}
 
 interface MatchingScreenState {}

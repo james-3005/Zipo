@@ -20,7 +20,7 @@ export default class ProfileScreen extends React.Component<
     };
   }
 
-  onChange = (event, selectedDate) => {
+  onChange = (event: Event, selectedDate: Date | undefined | null) => {
     const date = selectedDate || this.state.date;
     this.setState({ date, openDate: false });
   };
@@ -63,11 +63,11 @@ export default class ProfileScreen extends React.Component<
 
           <View style={[styles.formItem, styles.row]}>
             <View style={styles.rowCheckbox}>
-              <Text_>Male</Text_>
+              <Text_ text={'Male'} />
             </View>
             <View style={[styles.rowCheckbox, styles.mgl]}>
               <Switch />
-              <Text_>Female</Text_>
+              <Text_ text={'Female'} />
             </View>
           </View>
         </View>

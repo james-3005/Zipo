@@ -12,7 +12,7 @@ export default class ButtonBlue extends React.Component<
   render() {
     return (
       <Ripple style={styles.container}>
-        <Text_ style={styles.text}>{this.props.text}</Text_>
+        <Text_ text={this.props.text} />
       </Ripple>
     );
   }

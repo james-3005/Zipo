@@ -1,0 +1,5 @@
+export const TYPE = {
+  DARK_THEME: 'DARK_THEME',
+  LIGHT_THEME: 'LIGHT_THEME',
+  SWITCH_THEME: 'SWITCH_THEME',
+};

@@ -5,7 +5,11 @@ import styles from '../../scss/BottomNavigator.scss';
 import Svg from '../../../assets/svg/svg';
 import Text_ from '../atoms/Text_';
 import MatchingScreen from '../screens/MatchingScreen';
-export default class BottomNavigator extends React.Component<
+import { connect } from 'react-redux';
+import { reduxState } from '../../redux/reducer';
+import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+// @ts-ignore
+class BottomNavigator extends React.Component<
   BottomNavigatorProps,
   BottomNavigatorState
 > {
@@ -16,16 +20,16 @@ export default class BottomNavigator extends React.Component<
   render() {
     return (
       <View style={styles.container}>
-        <Tabs />
+        <Tabs theme={this.props.$store.theme} />
       </View>
     );
   }
 }
-
-const Tabs = () => {
+// @ts-ignore
+const Tabs = ({ theme }) => {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
+    <Tab.Navigator tabBar={(props) => <MyTabBar {...props} theme={theme} />}>
       <Tab.Screen
         name="setting"
         options={{ headerShown: false }}
@@ -50,24 +54,25 @@ const Tabs = () => {
 const Home = () => {
   return (
     <View style={{ flex: 1 }}>
-      <Text_>HomeScreen</Text_>
+      <Text_ text={'Home'} />
     </View>
   );
 };
-const MyTabBar = ({ state, descriptors, navigation }: any) => {
+const MyTabBar = ({ state, descriptors, navigation, theme }: any) => {
   return (
     <View
       style={[
         styles.bottomTabBar,
         {
-          shadowColor: '#000',
+          shadowColor: theme ? '#000' : '#FFFFFF',
           shadowOffset: {
-            width: 1,
-            height: 24,
+            width: 0,
+            height: 30,
           },
           shadowOpacity: 1,
-          shadowRadius: 16.0,
-          elevation: 24,
+          shadowRadius: 28.0,
+          elevation: 12,
+          backgroundColor: theme ? LIGHT_THEME.THEME : DARK_THEME.THEME,
         },
       ]}
     >
@@ -76,13 +81,13 @@ const MyTabBar = ({ state, descriptors, navigation }: any) => {
         let img;
         const isFocused = state.index === index;
         if (isFocused) {
-          if (label === 'setting') img = <Svg.Setting2 />;
-          else if (label === 'heart') img = <Svg.Heart2 />;
-          else img = <Svg.Chat2 />;
+          if (label === 'setting') img = <Svg.Setting2 theme={theme} />;
+          else if (label === 'heart') img = <Svg.Heart2 theme={theme} />;
+          else img = <Svg.Chat2 theme={theme} />;
         } else {
-          if (label === 'setting') img = <Svg.Setting1 />;
-          else if (label === 'heart') img = <Svg.Heart1 />;
-          else img = <Svg.Chat1 />;
+          if (label === 'setting') img = <Svg.Setting1 theme={theme} />;
+          else if (label === 'heart') img = <Svg.Heart1 theme={theme} />;
+          else img = <Svg.Chat1 theme={theme} />;
         }
         const onPress = () => {
           const event = navigation.emit({
@@ -110,6 +115,15 @@ const MyTabBar = ({ state, descriptors, navigation }: any) => {
   );
 };
 
-export interface BottomNavigatorProps {}
+function mapStateToProps(state: reduxState) {
+  return {
+    $store: state,
+  };
+}
+
+export default connect(mapStateToProps)(BottomNavigator);
+export interface BottomNavigatorProps {
+  $store: reduxState;
+}
 
 interface BottomNavigatorState {}
