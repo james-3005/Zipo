@@ -13,8 +13,10 @@ import Text_ from '../atoms/Text_';
 import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+import TopBar from '../molecules/TopBar';
+
 const OS = Platform.OS;
-const OTP = [0, 1, 2, 3];
+const OTP = [0, 1, 2, 3, 4, 5];
 class StartScreenEnterOTP extends React.Component<
   StartScreenEnterOTPProps,
   StartScreenEnterOTPState
@@ -24,17 +26,33 @@ class StartScreenEnterOTP extends React.Component<
     super(props);
     this.state = {
       otp: '',
+      isLoading: false,
     };
     this.inputRef = React.createRef<TextInput>();
   }
   changeInput = (e: String) => {
-    if (e.length > 4) return;
+    if (e.length > 6) return;
     this.setState({ otp: e });
   };
 
   focusInput = () => {
     // @ts-ignore:
     this.inputRef.focus();
+  };
+  navigate = async (type: String) => {
+    if (type === 'next') {
+      if (this.state.isLoading) return;
+      this.setState({ isLoading: true });
+      try {
+        const data = await this.props.navigation.route.params.confirm.confirm(
+          this.state.otp,
+        );
+        console.log(JSON.stringify(data, null, 2));
+      } catch (err) {
+      } finally {
+        this.setState({ isLoading: false });
+      }
+    } else this.props.navigation.navigation.goBack();
   };
   render() {
     return (
@@ -49,6 +67,11 @@ class StartScreenEnterOTP extends React.Component<
             },
           ]}
         >
+          <TopBar
+            back={true}
+            title={'Back'}
+            onPress={() => this.navigate('back')}
+          />
           <Text_ text={'Enter code'} style={styles.title} />
           <Text_
             text={`We have sent you an SMS with the code to\n +84 ${`1309 - 000 - 100`}`}
@@ -88,7 +111,11 @@ class StartScreenEnterOTP extends React.Component<
               this.inputRef = input;
             }}
           />
-          <ButtonBlue text={'Verify'} />
+          <ButtonBlue
+            text={'Verify'}
+            onPress={() => this.navigate('next')}
+            isLoading={this.state.isLoading}
+          />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -104,13 +131,15 @@ function mapStateToProps(state: reduxState) {
 export default connect(mapStateToProps)(StartScreenEnterOTP);
 export interface StartScreenEnterOTPProps {
   $store: reduxState;
+  navigation?: any;
+  confirm?: any;
 }
 
 interface StartScreenEnterOTPState {
   otp: String | any;
+  isLoading: Boolean;
 }
 interface textInputProps {
   focus?: Function;
-  focu?: String;
   current: any;
 }

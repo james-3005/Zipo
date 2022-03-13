@@ -13,13 +13,44 @@ const OS = Platform.OS;
 import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+import TopBar from '../molecules/TopBar';
+import Svg from '../../../assets/svg/svg';
+import auth from '@react-native-firebase/auth';
 class StartScreenEnterPhone extends React.Component<
   StartScreenEnterPhoneProps,
   StartScreenEnterPhoneState
 > {
   constructor(props: StartScreenEnterPhoneProps) {
     super(props);
+    this.state = {
+      loading: false,
+      phoneNumber: '',
+      isErrPhone: false,
+    };
   }
+  navigate = async (type: String) => {
+    if (type === 'next') {
+      if (this.state.loading) return;
+      this.setState({ loading: true });
+      try {
+        // const confirm2 = auth().currentUser.
+        // console.log(confirm2)
+        const confirm = await auth().signInWithPhoneNumber(
+          '+84' + this.state.phoneNumber,
+        );
+        this.props.navigation.navigation.navigate('startEnterOTP', {
+          confirm: confirm,
+        });
+      } catch (err) {
+        // this.props.navigation.navigation.navigate('startEnterOTP',{confirm})
+        if (err.code === 'auth/invalid-phone-number')
+          this.setState({ isErrPhone: 'Invalid phone number' });
+        else console.log(err.code);
+      } finally {
+        this.setState({ loading: false });
+      }
+    } else this.props.navigation.navigation.goBack();
+  };
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -33,6 +64,11 @@ class StartScreenEnterPhone extends React.Component<
             },
           ]}
         >
+          <TopBar
+            back={true}
+            title={'Back'}
+            onPress={() => this.navigate('back')}
+          />
           <Text_ text={'Enter Your Phone Number'} style={styles.title} />
           <Text_
             text={
@@ -43,12 +79,17 @@ class StartScreenEnterPhone extends React.Component<
           <View style={styles.enterPhoneContainer}>
             <Text_ text={'VN'} style={{ marginRight: 15 }} />
             <TextInput
+              value={this.state.phoneNumber}
+              onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
               style={[
-                styles.textInput,
+                !this.state.isErrPhone ? styles.textInput : styles.textInput2,
                 {
                   backgroundColor: this.props.$store.theme
                     ? LIGHT_THEME.INPUT_COLOR
                     : DARK_THEME.INPUT_COLOR,
+                  color: this.props.$store.theme
+                    ? LIGHT_THEME.FONT_COLOR
+                    : DARK_THEME.FONT_COLOR,
                 },
               ]}
               placeholder="Phone Number"
@@ -58,9 +99,17 @@ class StartScreenEnterPhone extends React.Component<
                   : DARK_THEME.FONT_COLOR
               }
               keyboardType={OS === 'android' ? 'numeric' : 'number-pad'}
+              onFocus={() => this.setState({ isErrPhone: false })}
             />
           </View>
-          <ButtonBlue text={'Continue'} />
+          <View style={styles.errView}>
+            <Text_ text={this.state.isErrPhone} style={styles.errText} />
+          </View>
+          <ButtonBlue
+            text={'Continue'}
+            onPress={() => this.navigate('next')}
+            isLoading={this.state.loading}
+          />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -77,6 +126,11 @@ export default connect(mapStateToProps)(StartScreenEnterPhone);
 
 export interface StartScreenEnterPhoneProps {
   $store: reduxState;
+  navigation?: any;
 }
 
-interface StartScreenEnterPhoneState {}
+interface StartScreenEnterPhoneState {
+  loading: Boolean;
+  phoneNumber: string;
+  isErrPhone: Boolean | string;
+}

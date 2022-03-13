@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, Touchable, View } from 'react-native';
 import styles from '../../scss/StartScreenLanding.scss';
 import Text_ from '../atoms/Text_';
 import ButtonBlue from '../atoms/ButtonBlue';
@@ -13,6 +13,9 @@ class StartScreenLanding extends React.Component<
   constructor(props: StartScreenLandingProps) {
     super(props);
   }
+  naviagate = () => {
+    this.props.navigation.navigation.navigate('startEnterPhone');
+  };
   render() {
     return (
       <View
@@ -27,13 +30,20 @@ class StartScreenLanding extends React.Component<
       >
         <View style={styles.icon}>
           <Image
-            source={require('../../../assets/chatbot.png')}
+            source={require('../../../assets/chatbot2.png')}
             style={styles.icon_Dimension}
           />
         </View>
         <Text_
           numberOfLines={3}
-          style={styles.title}
+          style={[
+            styles.title,
+            {
+              color: this.props.$store.theme
+                ? LIGHT_THEME.FONT_COLOR
+                : DARK_THEME.FONT_COLOR,
+            },
+          ]}
           text={'Connect easily with your family and friends over countries'}
         />
         <Text_
@@ -47,7 +57,7 @@ class StartScreenLanding extends React.Component<
           ]}
           text={'Terms & Privacy Policy'}
         />
-        <ButtonBlue text={'Start Messaging'} />
+        <ButtonBlue text={'Start Messaging'} onPress={this.naviagate} />
       </View>
     );
   }
@@ -62,6 +72,7 @@ function mapStateToProps(state: reduxState) {
 export default connect(mapStateToProps)(StartScreenLanding);
 export interface StartScreenLandingProps {
   $store: reduxState;
+  navigation?: any;
 }
 
 interface StartScreenLandingState {}

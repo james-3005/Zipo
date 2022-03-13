@@ -2,7 +2,7 @@ import { TYPE } from './actions';
 const initState = {
   isLoading: false,
   isErr: false,
-  theme: false,
+  theme: true,
 };
 // true: white, false: dark
 const reducer = (state = initState, action: action) => {

@@ -26,4 +26,19 @@
   background-color: $offWhite;
   border-radius: 4px;
   padding: 8px;
+  border: 1px solid transparent;
+}
+.textInput2 {
+  @extend .textInput;
+
+  border: 1px solid red;
+}
+.errText {
+  color: red;
+  margin-left: 21.5%;
+  margin-top: 2px;
+  font-size: 12px;
+}
+.errView {
+  width: 100%;
 }

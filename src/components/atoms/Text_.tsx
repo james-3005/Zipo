@@ -38,7 +38,7 @@ export interface Text_Props {
   style?: TextStyle | TextStyle[];
   numberOfLines?: Number;
   $store: reduxState;
-  text?: String;
+  text?: String | Number | undefined | Boolean;
 }
 
 interface Text_State {}

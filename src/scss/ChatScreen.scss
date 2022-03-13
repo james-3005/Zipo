@@ -1,0 +1,111 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 1;
+  align-items: center;
+}
+.listOnline {
+  height: 100px;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: nowrap;
+  width: 96%;
+  margin: 0px auto;
+  border-color: $offWhite;
+}
+.eachPerson {
+  margin-left: 10px;
+
+  align-items: center;
+  position: relative;
+}
+.imagePerson {
+  border-radius: 28px;
+}
+.personName {
+  font-size: 10px;
+  line-height: 16px;
+  color: $active;
+  margin-top: 4px;
+}
+.greenBadge {
+  width: 18px;
+  height: 18px;
+  background-color: #2cc069;
+  position: absolute;
+  border-radius: 10px;
+  border: 3px solid $white;
+  top: 44px;
+  left: 44px;
+}
+
+.story {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  background-color: $offWhite;
+}
+.containerFilterName {
+  width: 90%;
+  position: relative;
+  margin-top: 3%;
+}
+.filterName {
+  width: 100%;
+  height: 40px;
+  background-color: $offWhite;
+  padding-left: 50px;
+  border-radius: 4px;
+}
+.searchIcon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  justify-content: center;
+  left: 10px;
+}
+.scrollPerson {
+  width: 90%;
+  margin-top: 3%;
+  margin-bottom: 10px;
+}
+.Badge {
+  width: 18px;
+  height: 18px;
+  background-color: #2cc069;
+  position: absolute;
+  border-radius: 10px;
+  border: 3px solid $white;
+  top: 42px;
+  left: 44px;
+}
+.eachChat {
+  width: 100%;
+  flex-direction: row;
+  margin-top: 20px;
+}
+.content {
+  margin-left: 15px;
+  justify-content: space-evenly;
+  flex: 1;
+}
+.name {
+  font-family: $Mulish-600;
+  color: $active;
+}
+.chat {
+  font-size: 12px;
+  color: $disabled;
+}
+.noti {
+  align-items: center;
+  justify-content: space-evenly;
+}
+.blueDot {
+  width: 10px;
+  height: 10px;
+  background-color: $darkMode;
+  border-radius: 5px;
+}

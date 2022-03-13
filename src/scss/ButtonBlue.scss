@@ -10,8 +10,16 @@
   align-items: center;
   overflow: hidden;
 }
+.container_loading {
+  @extend .container;
+  background-color: $dark;
+}
 .text {
   font-size: 16px;
   font-family: $Mulish-600;
   color: $offWhite;
+}
+.loading {
+  height: 100px;
+  width: 100px;
 }

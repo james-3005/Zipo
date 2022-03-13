@@ -14,6 +14,9 @@ import WeatherMorning from './weather/weather.morning';
 import WeatherAfternoon from './weather/weather.afternoon';
 import WeatherNight from './weather/weather.night';
 import Notification from './notification';
+import Plus from './plus';
+import Search from './search';
+import ArrowLeft from './arrowLeft';
 export default {
   Heart1,
   Mess1,
@@ -30,4 +33,7 @@ export default {
   Chat1,
   Chat2,
   Notification,
+  Plus,
+  Search,
+  ArrowLeft,
 };

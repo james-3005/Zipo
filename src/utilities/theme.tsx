@@ -16,3 +16,12 @@ export const DARK_THEME = {
   INPUT_COLOR: '#152033',
   PLACE_HOLDER: '#ADB5BD',
 };
+
+export interface THEME {
+  type: String;
+  THEM: String;
+  FONT_COLOR: String;
+  STROKE_ICON: String;
+  INPUT_COLOR: String;
+  PLACE_HOLDER: String;
+}

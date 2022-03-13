@@ -16,40 +16,28 @@ if (fileName) {
       if (type) {
         fs.writeFileSync(
           `${fileName}.tsx`,
-          `import React from 'react';
-import { View } from 'react-native';
-import styles from '../../scss/${fileName}.scss'
-import { connect } from "react-redux";
+          `import React, { FC, useState } from "react";
+import { View } from "react-native";
+import styles from "../../scss/${fileName}.scss";
+import { useSelector } from "react-redux";
 import { reduxState } from "../../redux/reducer";
-import { LIGHT_THEME, DARK_THEME } from "../../utilities/theme";
+const ${fileName}: FC = (props: ${fileName}Props) => {
+  const [store] = useState<reduxState>(
+    useSelector((state) => state) as reduxState
+  );
+  
+  return (
+    <View style={styles.container}>
+      
+    </View>
+  );
+};
 
-class ${fileName} extends React.Component<${fileName}Props, ${fileName}State> {
-  constructor(props: ${fileName}Props) {
-    super(props);
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-        
-      </View>
-    );
-  }
-}
+export default ${fileName};
 
-function mapStateToProps(state: reduxState) {
-  return {
-    $store: state,
-  };
-}
+export interface ${fileName}Props {}
 
-export default connect(mapStateToProps)(${fileName});
-export interface ${fileName}Props {
-  $store: reduxState
-}
-
-interface ${fileName}State {
-
-}`,
+interface ${fileName}State {}`,
         );
       } else
         fs.writeFileSync(

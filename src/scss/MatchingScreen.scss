@@ -5,12 +5,17 @@
   align-items: center;
 }
 .centerContainer {
-  margin-top: 25%;
+  margin-top: 22%;
   justify-content: center;
   align-items: center;
 }
 .titleText {
-  margin-bottom: 5%;
-  font-size: 24px;
+  margin-bottom: 2%;
+  font-size: 27px;
   font-family: $Mulish-700;
+}
+
+.searching {
+  width: 350px;
+  height: 350px;
 }

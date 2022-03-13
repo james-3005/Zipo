@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "686282567535",
+    "project_id": "zipe-a24b9",
+    "storage_bucket": "zipe-a24b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686282567535:android:3d99f264b4a3fd8032029a",
+        "android_client_info": {
+          "package_name": "com.zipo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "686282567535-0uv0l7ch15j9n6l7jivq952tllju3crk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zipo",
+            "certificate_hash": "44c15c91c953cbed1099fbc6953522d67a2ce9e3"
+          }
+        },
+        {
+          "client_id": "686282567535-qmh8no6601dn2lu611379mmrcvnucv8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo99aD4PuN5mUjF6iIOBBiJEPcZRIG_mE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "686282567535-qmh8no6601dn2lu611379mmrcvnucv8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

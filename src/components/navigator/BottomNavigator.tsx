@@ -8,6 +8,7 @@ import MatchingScreen from '../screens/MatchingScreen';
 import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+import ChatScreen from '../screens/ChatScreen';
 // @ts-ignore
 class BottomNavigator extends React.Component<
   BottomNavigatorProps,
@@ -45,19 +46,55 @@ const Tabs = ({ theme }) => {
       <Tab.Screen
         name="chat"
         options={{ headerShown: false }}
-        component={Home}
+        component={ChatScreen}
         key="chat"
       />
     </Tab.Navigator>
   );
 };
-const Home = () => {
+import { useState, useEffect } from 'react';
+import { Text } from 'react-native';
+import auth from '@react-native-firebase/auth';
+
+function Home() {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user: any) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <View>
+        <Text>Login</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1 }}>
-      <Text_ text={'Home'} />
+    <View>
+      <Text>Welcome {user.email}</Text>
     </View>
   );
-};
+}
+// const Home = () => {
+//   return (
+//     <View style={{ flex: 1 }}>
+//       <Text_ text={'Home'} />
+//     </View>
+//   );
+// };
 const MyTabBar = ({ state, descriptors, navigation, theme }: any) => {
   return (
     <View
