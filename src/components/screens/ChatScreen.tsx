@@ -1,19 +1,39 @@
 import React, { FC, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import styles from '../../scss/ChatScreen.scss';
 import Text_ from '../atoms/Text_';
 import TopBar from '../molecules/TopBar';
 import Svg from '../../../assets/svg/svg';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
-const ChatScreen: FC = (props: ChatScreenProps) => {
+import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
+const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
   const [store] = useState<reduxState>(
     useSelector((state) => state) as reduxState,
   );
   const people = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1];
+  const navigateToChat = () => {
+    console.log(props.navigation.navigate('chatScreenDetail'));
+  };
   useEffect(() => {}, []);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: props.$store.theme
+            ? LIGHT_THEME.THEME
+            : DARK_THEME.THEME,
+        },
+      ]}
+    >
       <TopBar
         rightComponent={
           <View>
@@ -22,7 +42,17 @@ const ChatScreen: FC = (props: ChatScreenProps) => {
         }
         title={'Chats'}
       />
-      <View style={[styles.listOnline, { borderBottomWidth: 2 }]}>
+      <View
+        style={[
+          styles.listOnline,
+          {
+            borderBottomWidth: 2,
+            borderBottomColor: props.$store.theme
+              ? LIGHT_THEME.INPUT_COLOR
+              : DARK_THEME.INPUT_COLOR,
+          },
+        ]}
+      >
         <FlatList
           horizontal
           data={people}
@@ -30,8 +60,24 @@ const ChatScreen: FC = (props: ChatScreenProps) => {
           renderItem={({ item, index }) => {
             if (index === 0)
               return (
-                <View style={[styles.eachPerson, { marginLeft: 0 }]}>
-                  <View style={styles.story}>
+                <View
+                  style={[
+                    styles.eachPerson,
+                    {
+                      marginLeft: 0,
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.story,
+                      {
+                        backgroundColor: props.$store.theme
+                          ? LIGHT_THEME.INPUT_COLOR
+                          : DARK_THEME.INPUT_COLOR,
+                      },
+                    ]}
+                  >
                     <Svg.Plus />
                   </View>
                   <Text_ style={styles.personName} text={'Chat'} />
@@ -39,29 +85,46 @@ const ChatScreen: FC = (props: ChatScreenProps) => {
               );
             else
               return (
-                <View style={[styles.eachPerson]}>
-                  <Image
-                    source={{
-                      width: 60,
-                      height: 60,
-                      uri: 'https://scontent.fhan3-1.fna.fbcdn.net/v/t39.30808-6/267620900_1332001227228647_7579166299747361701_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RIrJsLZe268AX9cspSx&tn=JlXeofjKcUaQwvQP&_nc_ht=scontent.fhan3-1.fna&oh=00_AT8Ey6qELtFo11h3BDJ392C10RhGIRsqNs-9opSQmuBGfw&oe=62161329',
-                    }}
-                    style={styles.imagePerson}
-                  />
-                  <Text_
-                    numberOfLines={2}
-                    text={'Huy Nhật'}
-                    style={styles.personName}
-                  />
-                  <View style={styles.greenBadge} />
-                </View>
+                <TouchableWithoutFeedback onPress={navigateToChat}>
+                  <View style={[styles.eachPerson]}>
+                    <Image
+                      source={{
+                        width: 60,
+                        height: 60,
+                        uri: 'https://olptienganh.vn/wp-content/uploads/2022/01/Tap-2-Kimetsu-no-Yaiba-Season-2-Entertainment-District-Arc.jpg',
+                      }}
+                      style={styles.imagePerson}
+                    />
+                    <Text_
+                      numberOfLines={2}
+                      text={'Huy Nhật'}
+                      style={styles.personName}
+                    />
+                    <View style={styles.greenBadge} />
+                  </View>
+                </TouchableWithoutFeedback>
               );
           }}
           scrollEnabled
         />
       </View>
       <View style={styles.containerFilterName}>
-        <TextInput style={styles.filterName} placeholder={'Find name'} />
+        <TextInput
+          style={[
+            styles.filterName,
+            {
+              backgroundColor: props.$store.theme
+                ? LIGHT_THEME.INPUT_COLOR
+                : DARK_THEME.INPUT_COLOR,
+            },
+          ]}
+          placeholder={'Find name'}
+          placeholderTextColor={
+            props.$store.theme
+              ? LIGHT_THEME.PLACE_HOLDER
+              : DARK_THEME.PLACE_HOLDER
+          }
+        />
         <View style={styles.searchIcon}>
           <Svg.Search />
         </View>
@@ -77,7 +140,7 @@ const ChatScreen: FC = (props: ChatScreenProps) => {
                 source={{
                   width: 60,
                   height: 60,
-                  uri: 'https://scontent.fhan3-1.fna.fbcdn.net/v/t39.30808-6/267620900_1332001227228647_7579166299747361701_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RIrJsLZe268AX9cspSx&tn=JlXeofjKcUaQwvQP&_nc_ht=scontent.fhan3-1.fna&oh=00_AT8Ey6qELtFo11h3BDJ392C10RhGIRsqNs-9opSQmuBGfw&oe=62161329',
+                  uri: 'https://mondaycareer.com/wp-content/uploads/2020/11/anime-l%C3%A0-g%C3%AC-vampire.jpg',
                 }}
                 style={styles.imagePerson}
               />
@@ -102,8 +165,17 @@ const ChatScreen: FC = (props: ChatScreenProps) => {
   );
 };
 
-export default ChatScreen;
+function mapStateToProps(state: reduxState) {
+  return {
+    $store: state,
+  };
+}
 
-export interface ChatScreenProps {}
+export default connect(mapStateToProps)(ChatScreen);
+
+export interface ChatScreenProps {
+  navigation?: any;
+  $store: reduxState;
+}
 
 interface ChatScreenState {}

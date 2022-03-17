@@ -19,9 +19,9 @@ if (fileName) {
           `import React, { FC, useState } from "react";
 import { View } from "react-native";
 import styles from "../../scss/${fileName}.scss";
-import { useSelector } from "react-redux";
+import { useSelector, connect } from "react-redux";
 import { reduxState } from "../../redux/reducer";
-const ${fileName}: FC = (props: ${fileName}Props) => {
+const ${fileName}: FC<${fileName}> = (props: ${fileName}Props) => {
   const [store] = useState<reduxState>(
     useSelector((state) => state) as reduxState
   );
@@ -33,11 +33,21 @@ const ${fileName}: FC = (props: ${fileName}Props) => {
   );
 };
 
-export default ${fileName};
+function mapStateToProps(state: reduxState) {
+  return {
+    $store: state,
+  };
+}
 
-export interface ${fileName}Props {}
+export default connect(mapStateToProps)(${fileName});
 
-interface ${fileName}State {}`,
+export interface ${fileName}Props {
+  $store: reduxState,
+}
+
+interface ${fileName}State {
+  
+}`,
         );
       } else
         fs.writeFileSync(

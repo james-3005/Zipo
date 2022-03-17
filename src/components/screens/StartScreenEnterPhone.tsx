@@ -33,15 +33,14 @@ class StartScreenEnterPhone extends React.Component<
       if (this.state.loading) return;
       this.setState({ loading: true });
       try {
-        // const confirm2 = auth().currentUser.
-        // console.log(confirm2)
         const confirm = await auth().signInWithPhoneNumber(
           '+84' + this.state.phoneNumber,
         );
         this.props.navigation.navigation.navigate('startEnterOTP', {
           confirm: confirm,
+          phone: this.state.phoneNumber,
         });
-      } catch (err) {
+      } catch (err: any) {
         // this.props.navigation.navigation.navigate('startEnterOTP',{confirm})
         if (err.code === 'auth/invalid-phone-number')
           this.setState({ isErrPhone: 'Invalid phone number' });
@@ -51,6 +50,7 @@ class StartScreenEnterPhone extends React.Component<
       }
     } else this.props.navigation.navigation.goBack();
   };
+
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -95,8 +95,8 @@ class StartScreenEnterPhone extends React.Component<
               placeholder="Phone Number"
               placeholderTextColor={
                 this.props.$store.theme
-                  ? LIGHT_THEME.FONT_COLOR
-                  : DARK_THEME.FONT_COLOR
+                  ? LIGHT_THEME.PLACE_HOLDER
+                  : DARK_THEME.PLACE_HOLDER
               }
               keyboardType={OS === 'android' ? 'numeric' : 'number-pad'}
               onFocus={() => this.setState({ isErrPhone: false })}

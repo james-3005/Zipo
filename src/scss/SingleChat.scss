@@ -1,0 +1,36 @@
+@import 'app';
+.container {
+  max-width: 300;
+  height: auto;
+  padding: 10px;
+  margin-top: 12px;
+}
+.sender {
+  background-color: $default;
+  border-radius: 16px 16px 0px 16px;
+  align-self: flex-end;
+}
+
+.receiver {
+  background-color: $white;
+  border-radius: 16px 16px 16px 0px;
+  align-self: flex-start;
+}
+.whiteText {
+  color: $white;
+}
+.blackText {
+  color: $active;
+}
+.whiteTextSmall {
+  margin-top: 4px;
+  @extend .whiteText;
+  font-size: 10px;
+  text-align: right;
+}
+.blackTextSmall {
+  margin-top: 4px;
+  @extend .blackText;
+  font-size: 10px;
+  text-align: left;
+}

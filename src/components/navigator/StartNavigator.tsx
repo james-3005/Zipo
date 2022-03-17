@@ -12,7 +12,7 @@ import {
 import StartScreenLanding from '../screens/StartScreenLanding';
 import StartScreenEnterPhone from '../screens/StartScreenEnterPhone';
 import StartScreenEnterOTP from '../screens/StartScreenEnterOTP';
-import Text_ from '../atoms/Text_';
+import StartScreenCheckUser from '../screens/StartScreenCheckUser';
 
 const StartNavigator: FC = (props: StartNavigatorProps) => {
   const [store] = useState<reduxState>(
@@ -48,6 +48,13 @@ const StartNavigator: FC = (props: StartNavigatorProps) => {
         key="startEnterOTP"
       >
         {(navigation) => <StartScreenEnterOTP navigation={navigation} />}
+      </Stack.Screen>
+      <Stack.Screen
+        name="startEnterCheckUser"
+        options={{ headerShown: false }}
+        key="startEnterCheckUser"
+      >
+        {(navigation) => <StartScreenCheckUser navigation={navigation} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

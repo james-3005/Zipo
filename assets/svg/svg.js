@@ -9,14 +9,13 @@ import Mess2 from './mess2';
 import Setting2 from './setting2';
 import Illustration from './illustration';
 import Calendar from './calendar';
-import WeatherRain from './weather/weather.rain';
-import WeatherMorning from './weather/weather.morning';
-import WeatherAfternoon from './weather/weather.afternoon';
-import WeatherNight from './weather/weather.night';
 import Notification from './notification';
 import Plus from './plus';
 import Search from './search';
 import ArrowLeft from './arrowLeft';
+import SearchBold from './searchBold';
+import General from './general';
+import Sent from './sent';
 export default {
   Heart1,
   Mess1,
@@ -26,14 +25,13 @@ export default {
   Setting2,
   Illustration,
   Calendar,
-  WeatherRain,
-  WeatherMorning,
-  WeatherNight,
-  WeatherAfternoon,
   Chat1,
   Chat2,
   Notification,
   Plus,
   Search,
   ArrowLeft,
+  SearchBold,
+  General,
+  Sent,
 };

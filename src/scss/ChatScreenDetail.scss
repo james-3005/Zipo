@@ -1,0 +1,23 @@
+@import 'app';
+.container {
+  flex: 1;
+  background-color: $offWhite;
+}
+.containerInside {
+  flex: 1;
+  padding: 16px;
+}
+.bottomChat {
+  flex-direction: row;
+  padding: 10px;
+  padding-bottom: 20px;
+  background-color: $white;
+  align-items: center;
+  justify-content: space-between;
+}
+.phone {
+  width: 80%;
+  border-radius: 4px;
+  height: 36px;
+  padding: 0px 10px;
+}

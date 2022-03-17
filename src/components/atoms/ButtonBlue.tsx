@@ -34,7 +34,7 @@ class ButtonBlue extends React.Component<ButtonBlueProps, ButtonBlueState> {
           <Text_
             text={this.props.text}
             style={{
-              color: this.state.THEME.INPUT_COLOR,
+              color: LIGHT_THEME.INPUT_COLOR,
             }}
           />
         )}

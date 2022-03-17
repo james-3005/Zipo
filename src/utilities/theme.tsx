@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 export const LIGHT_THEME = {
   type: 'LIGHT_THEME',
   THEME: '#FFFFFF',

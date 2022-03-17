@@ -5,7 +5,7 @@ import styles from '../../scss/BottomNavigator.scss';
 import Svg from '../../../assets/svg/svg';
 import Text_ from '../atoms/Text_';
 import MatchingScreen from '../screens/MatchingScreen';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
 import ChatScreen from '../screens/ChatScreen';
@@ -49,18 +49,30 @@ const Tabs = ({ theme }) => {
         component={ChatScreen}
         key="chat"
       />
+      <Tab.Screen
+        name="chatScreenDetail"
+        options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
+        component={ChatScreenDetail}
+        key="chatScreenDetail"
+      />
     </Tab.Navigator>
   );
 };
 import { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { TransitionPresets } from '@react-navigation/stack';
+import SingleChat from '../atoms/SingleChat';
+import ChatScreenDetail from '../screens/ChatScreenDetail';
+import TopBar from '../molecules/TopBar';
+import ButtonBlue from '../atoms/ButtonBlue';
+import { TYPE } from '../../redux/actions';
 
 function Home() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-
+  const dispatch = useDispatch();
   // Handle user state changes
   function onAuthStateChanged(user: any) {
     setUser(user);
@@ -71,31 +83,22 @@ function Home() {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
-
-  if (initializing) return null;
-
-  if (!user) {
-    return (
-      <View>
-        <Text>Login</Text>
-      </View>
-    );
-  }
+  const changeMode = () => {
+    dispatch({ type: TYPE.SWITCH_THEME });
+  };
 
   return (
-    <View>
-      <Text>Welcome {user.email}</Text>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <TopBar title={'More'} />
+      <TouchableOpacity onPress={changeMode}>
+        <Text>Change mode</Text>
+      </TouchableOpacity>
     </View>
   );
 }
-// const Home = () => {
-//   return (
-//     <View style={{ flex: 1 }}>
-//       <Text_ text={'Home'} />
-//     </View>
-//   );
-// };
+
 const MyTabBar = ({ state, descriptors, navigation, theme }: any) => {
+  if (state.index === 3) return null;
   return (
     <View
       style={[
@@ -113,7 +116,7 @@ const MyTabBar = ({ state, descriptors, navigation, theme }: any) => {
         },
       ]}
     >
-      {state.routes.map((route: any, index: Number) => {
+      {state.routes.slice(0, 3).map((route: any, index: Number) => {
         const label = route.name;
         let img;
         const isFocused = state.index === index;

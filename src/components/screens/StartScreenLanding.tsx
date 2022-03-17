@@ -6,6 +6,8 @@ import ButtonBlue from '../atoms/ButtonBlue';
 import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
+import { store } from '../../../App';
+import { TYPE } from '../../redux/actions';
 class StartScreenLanding extends React.Component<
   StartScreenLandingProps,
   StartScreenLandingState
@@ -16,6 +18,7 @@ class StartScreenLanding extends React.Component<
   naviagate = () => {
     this.props.navigation.navigation.navigate('startEnterPhone');
   };
+
   render() {
     return (
       <View

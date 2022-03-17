@@ -47,12 +47,23 @@ class StartScreenEnterOTP extends React.Component<
         const data = await this.props.navigation.route.params.confirm.confirm(
           this.state.otp,
         );
-        console.log(JSON.stringify(data, null, 2));
+        this.props.navigation.navigation.navigate('startEnterCheckUser', {
+          user: data,
+        });
       } catch (err) {
+        console.log(err.code);
       } finally {
         this.setState({ isLoading: false });
       }
     } else this.props.navigation.navigation.goBack();
+  };
+  formatPhoneNumber = (phoneNumberString: string) => {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{3})$/);
+    if (match) {
+      return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    }
+    return null;
   };
   render() {
     return (
@@ -74,7 +85,9 @@ class StartScreenEnterOTP extends React.Component<
           />
           <Text_ text={'Enter code'} style={styles.title} />
           <Text_
-            text={`We have sent you an SMS with the code to\n +84 ${`1309 - 000 - 100`}`}
+            text={`We have sent you an SMS with the code to\n +84 ${this.formatPhoneNumber(
+              this.props.navigation.route.params.phone,
+            )}`}
             style={styles.subTitle}
           />
 
