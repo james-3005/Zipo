@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
 import TopBar from '../molecules/TopBar';
-import Svg from '../../../assets/svg/svg';
 import auth from '@react-native-firebase/auth';
 class StartScreenEnterPhone extends React.Component<
   StartScreenEnterPhoneProps,

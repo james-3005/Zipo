@@ -3,7 +3,6 @@ import { TouchableWithoutFeedback, View } from 'react-native';
 import styles from '../../scss/MatchingScreen.scss';
 import TopBar from '../molecules/TopBar';
 import Svg from '../../../assets/svg/svg';
-import ButtonWave from '../atoms/ButtonWave';
 import Text_ from '../atoms/Text_';
 import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
@@ -14,6 +13,7 @@ class MatchingScreen extends React.Component<
   MatchingScreenState
 > {
   animation: React.RefObject<null | any>;
+  loading: React.RefObject<null | any>;
   constructor(props: MatchingScreenProps) {
     super(props);
     this.state = {
@@ -21,6 +21,7 @@ class MatchingScreen extends React.Component<
       isLoop: false,
     };
     this.animation = React.createRef();
+    this.loading = React.createRef();
   }
   toggleSearch = () => {
     this.setState(
@@ -28,7 +29,11 @@ class MatchingScreen extends React.Component<
       () => {
         if (this.state.isSearch) {
           this.animation.current.play(0, 251);
-        } else this.animation.current.play(0, 0);
+          this.loading.current.play(0, 81);
+        } else {
+          this.animation.current.play(0, 0);
+          this.loading.current.play(62, 62);
+        }
       },
     );
   };
@@ -62,6 +67,14 @@ class MatchingScreen extends React.Component<
               ref={this.animation}
             />
           </TouchableWithoutFeedback>
+          <View style={styles.loadingContainer}>
+            <LottieView
+              source={require('../../../assets/lottie/loadingDot.json')}
+              loop={true}
+              style={styles.loading}
+              ref={this.loading}
+            />
+          </View>
         </View>
       </View>
     );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Image, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../scss/ProfileScreen.scss';
-// import {Assets, RadioButton} from 'react-native-ui-lib';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ButtonBlue from '../atoms/ButtonBlue';
 import Svg from '../../../assets/svg/svg';
@@ -28,9 +27,8 @@ export default class ProfileScreen extends React.Component<
     return (
       <View style={styles.container}>
         <View style={{ marginTop: '45%' }}>
-          {/* <Svg.Illustration /> */}
           <Image
-            source={require('../../../assets/chatbot.png')}
+            source={require('../../../assets/chatbot2.png')}
             style={styles.icon}
           />
         </View>

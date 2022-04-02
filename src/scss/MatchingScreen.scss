@@ -19,3 +19,16 @@
   width: 350px;
   height: 350px;
 }
+.loading {
+  width: 150px;
+  height: 150px;
+  // position: absolute;
+}
+.loadingContainer {
+  width: 100px;
+  height: 100px;
+  // border: 1px solid black;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}

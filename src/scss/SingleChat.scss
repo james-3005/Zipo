@@ -1,9 +1,10 @@
 @import 'app';
 .container {
   max-width: 300;
+  min-width: 100;
   height: auto;
   padding: 10px;
-  margin-top: 12px;
+  margin: 0 0 8px 0;
 }
 .sender {
   background-color: $default;
@@ -33,4 +34,24 @@
   @extend .blackText;
   font-size: 10px;
   text-align: left;
+}
+.like {
+  width: 35px;
+  height: 35px;
+}
+.likeContainer {
+  bottom: 5px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+}
+.likeContainer1 {
+  @extend .likeContainer;
+  right: 5px;
+}
+.likeContainer2 {
+  @extend .likeContainer;
+  left: 5px;
 }

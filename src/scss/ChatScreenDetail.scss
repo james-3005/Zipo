@@ -5,12 +5,16 @@
 }
 .containerInside {
   flex: 1;
-  padding: 16px;
+  padding: 0px 16px 16px 16px;
+}
+.containerInside2 {
+  flex: 1;
+  height: 100;
+  align-self: center;
 }
 .bottomChat {
   flex-direction: row;
   padding: 10px;
-  padding-bottom: 20px;
   background-color: $white;
   align-items: center;
   justify-content: space-between;
@@ -20,4 +24,43 @@
   border-radius: 4px;
   height: 36px;
   padding: 0px 10px;
+}
+
+.emotion {
+  width: 99px;
+  height: 99px;
+  // border: 1px solid black
+}
+.emotion2 {
+  // margin-left: 8px;
+  width: 50px;
+  height: 50px;
+}
+
+.emotionSideSender {
+  align-self: flex-end;
+  margin-bottom: 8px;
+}
+.emotionSideReceiver {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+.emotionAndPicture {
+  height: 61px;
+  width: 100%;
+  padding: 0;
+  border-color: $weak;
+}
+.emotionList {
+  background-color: $white;
+  padding: 5px;
+  // width: 80%;
+  // border: 1px solid black
+}
+.camera {
+  width: 50px;
+  height: 50px;
+  margin-right: 8px;
+  justify-content: center;
+  align-items: center;
 }

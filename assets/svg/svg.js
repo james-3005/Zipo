@@ -16,6 +16,9 @@ import ArrowLeft from './arrowLeft';
 import SearchBold from './searchBold';
 import General from './general';
 import Sent from './sent';
+import Phone from './phone';
+import Camera from './camera';
+import FolderPicture from './folderPicture';
 export default {
   Heart1,
   Mess1,
@@ -34,4 +37,7 @@ export default {
   SearchBold,
   General,
   Sent,
+  Phone,
+  Camera,
+  FolderPicture,
 };

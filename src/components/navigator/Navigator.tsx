@@ -20,6 +20,7 @@ const Navigator: FC<NavigatorProps> = (props: NavigatorProps) => {
       setIsAppLoaded(true);
     }, 1000);
   }, []);
+
   const getAsyncStorage =
     () =>
     (dispatch: any): void => {

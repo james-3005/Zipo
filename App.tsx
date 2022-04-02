@@ -10,6 +10,7 @@ LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   'Non-serializable values were found in the navigation state',
   'Require cycle',
+  'Error: [auth/no-current-user] No user currently signed in.',
 ]);
 const App = () => {
   const store = createStore(Reducer as any, applyMiddleware(thunk));

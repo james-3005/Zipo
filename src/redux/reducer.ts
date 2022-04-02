@@ -1,4 +1,5 @@
 import { GET_THEME, SET_LOG, SET_THEME } from '../utilities/asyncStorage';
+import auth from '@react-native-firebase/auth';
 import { TYPE } from './actions';
 const initState = {
   isLoading: false,
@@ -30,6 +31,7 @@ const reducer = (state = initState, action: action) => {
       };
     }
     case TYPE.LOGOUT:
+      auth().signOut();
       return {
         ...state,
         isLog: false,

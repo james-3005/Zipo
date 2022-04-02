@@ -1,11 +1,9 @@
 import React, { FC, useState } from 'react';
-import { View } from 'react-native';
-import styles from '../../scss/StartNavigator.scss';
+
 import { useSelector } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 
 import {
-  CardStyleInterpolators,
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack';

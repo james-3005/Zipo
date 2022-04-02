@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
-  ScrollView,
   TextInput,
   TouchableWithoutFeedback,
   View,
@@ -14,15 +13,72 @@ import Svg from '../../../assets/svg/svg';
 import { connect, useSelector } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
+import db from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import { TO_MOMENT } from '../../utilities/common';
 const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
   const [store] = useState<reduxState>(
     useSelector((state) => state) as reduxState,
   );
-  const people = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1];
-  const navigateToChat = () => {
-    console.log(props.navigation.navigate('chatScreenDetail'));
+  const [people, setPeople] = useState<any[]>([]);
+  const [peopleId, setPeopleId] = useState<any[]>([]);
+  const [findText, setFindText] = useState('');
+  const navigateToChat = (user: any) => {
+    props.navigation.navigate('chatScreenDetail', { user });
   };
-  useEffect(() => {}, []);
+  const getAllUserMatchId = async () => {
+    let pp: any[] = [];
+    db()
+      .collection('chats')
+      .where(`${auth().currentUser?.uid}.exist`, '==', true)
+      .onSnapshot((doc) => {
+        pp = doc.docs.map((doc) => {
+          const user = doc.data();
+          for (let i in user) {
+            if (i !== auth().currentUser?.uid) {
+              return {
+                id: i,
+                ...user[i],
+              };
+            }
+          }
+        });
+        pp.sort(function (a, b) {
+          return ('' + a.id).localeCompare(b.id);
+        });
+        setPeopleId(pp);
+      });
+  };
+  const getAllUserMatch = async () => {
+    let pp: any[] = [];
+    db()
+      .collection('users')
+      .where(
+        'id',
+        'in',
+        peopleId.map((item) => item.id),
+      )
+      .onSnapshot((doc) => {
+        pp = doc.docs.map((doc) => {
+          return {
+            ...doc.data(),
+          };
+        });
+        pp.sort(function (a, b) {
+          return ('' + a.id).localeCompare(b.id);
+        });
+        setPeople(pp);
+      });
+  };
+  useEffect((): any => {
+    getAllUserMatchId();
+    return;
+  }, []);
+  useEffect((): any => {
+    if (peopleId.length === 0) return;
+    getAllUserMatch();
+    return;
+  }, [peopleId]);
   return (
     <View
       style={[
@@ -42,72 +98,6 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
         }
         title={'Chats'}
       />
-      <View
-        style={[
-          styles.listOnline,
-          {
-            borderBottomWidth: 2,
-            borderBottomColor: props.$store.theme
-              ? LIGHT_THEME.INPUT_COLOR
-              : DARK_THEME.INPUT_COLOR,
-          },
-        ]}
-      >
-        <FlatList
-          horizontal
-          data={people}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item, index }) => {
-            if (index === 0)
-              return (
-                <View
-                  style={[
-                    styles.eachPerson,
-                    {
-                      marginLeft: 0,
-                    },
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.story,
-                      {
-                        backgroundColor: props.$store.theme
-                          ? LIGHT_THEME.INPUT_COLOR
-                          : DARK_THEME.INPUT_COLOR,
-                      },
-                    ]}
-                  >
-                    <Svg.Plus />
-                  </View>
-                  <Text_ style={styles.personName} text={'Chat'} />
-                </View>
-              );
-            else
-              return (
-                <TouchableWithoutFeedback onPress={navigateToChat}>
-                  <View style={[styles.eachPerson]}>
-                    <Image
-                      source={{
-                        width: 60,
-                        height: 60,
-                        uri: 'https://olptienganh.vn/wp-content/uploads/2022/01/Tap-2-Kimetsu-no-Yaiba-Season-2-Entertainment-District-Arc.jpg',
-                      }}
-                      style={styles.imagePerson}
-                    />
-                    <Text_
-                      numberOfLines={2}
-                      text={'Huy Nhật'}
-                      style={styles.personName}
-                    />
-                    <View style={styles.greenBadge} />
-                  </View>
-                </TouchableWithoutFeedback>
-              );
-          }}
-          scrollEnabled
-        />
-      </View>
       <View style={styles.containerFilterName}>
         <TextInput
           style={[
@@ -116,6 +106,9 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
               backgroundColor: props.$store.theme
                 ? LIGHT_THEME.INPUT_COLOR
                 : DARK_THEME.INPUT_COLOR,
+              color: props.$store.theme
+                ? LIGHT_THEME.PLACE_HOLDER
+                : DARK_THEME.PLACE_HOLDER,
             },
           ]}
           placeholder={'Find name'}
@@ -124,6 +117,7 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
               ? LIGHT_THEME.PLACE_HOLDER
               : DARK_THEME.PLACE_HOLDER
           }
+          onChangeText={(text) => setFindText(text)}
         />
         <View style={styles.searchIcon}>
           <Svg.Search />
@@ -132,33 +126,61 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         style={styles.scrollPerson}
-        data={people}
+        data={people.filter((item) =>
+          item.name.toLowerCase().includes(findText.toLowerCase()),
+        )}
         renderItem={({ item, index }) => (
-          <View style={[styles.eachChat, index === 0 && { marginTop: 0 }]}>
-            <View style={styles.eachPerson2}>
-              <Image
-                source={{
-                  width: 60,
-                  height: 60,
-                  uri: 'https://mondaycareer.com/wp-content/uploads/2020/11/anime-l%C3%A0-g%C3%AC-vampire.jpg',
-                }}
-                style={styles.imagePerson}
-              />
-              <View style={styles.Badge} />
+          <TouchableWithoutFeedback onPress={() => navigateToChat(item)}>
+            <View style={[styles.eachChat, index === 0 && { marginTop: 0 }]}>
+              <View style={styles.eachPerson2}>
+                <Image
+                  source={{
+                    width: 60,
+                    height: 60,
+                    uri: item.avatar,
+                  }}
+                  style={styles.imagePerson}
+                />
+                <View style={styles.Badge} />
+              </View>
+              <View style={styles.content}>
+                <Text_
+                  numberOfLines={1}
+                  style={[
+                    styles.name,
+                    {
+                      color: props.$store.theme
+                        ? LIGHT_THEME.FONT_COLOR
+                        : DARK_THEME.FONT_COLOR,
+                    },
+                  ]}
+                  text={item.name}
+                />
+                <Text_
+                  numberOfLines={1}
+                  style={[
+                    styles.chat,
+                    {
+                      color: props.$store.theme
+                        ? LIGHT_THEME.PLACE_HOLDER
+                        : DARK_THEME.PLACE_HOLDER,
+                    },
+                  ]}
+                  text={peopleId[index].message || 'Say hi'}
+                />
+              </View>
+              <View style={styles.noti}>
+                <Text_
+                  numberOfLines={1}
+                  style={styles.chat}
+                  text={
+                    peopleId[index].time ? TO_MOMENT(peopleId[index].time) : ''
+                  }
+                />
+                {index === 0 && <View style={styles.blueDot} />}
+              </View>
             </View>
-            <View style={styles.content}>
-              <Text_ numberOfLines={1} style={styles.name} text={'Huy'} />
-              <Text_
-                numberOfLines={1}
-                style={styles.chat}
-                text={'Lorem ipsum dolor sit amet.'}
-              />
-            </View>
-            <View style={styles.noti}>
-              <Text_ numberOfLines={1} style={styles.chat} text={'17/2'} />
-              <View style={styles.blueDot} />
-            </View>
-          </View>
+          </TouchableWithoutFeedback>
         )}
       />
     </View>

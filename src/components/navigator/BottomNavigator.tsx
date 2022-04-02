@@ -34,7 +34,7 @@ const Tabs = ({ theme }) => {
       <Tab.Screen
         name="setting"
         options={{ headerShown: false }}
-        component={Home}
+        component={ProfileScreen}
         key="setting"
       />
       <Tab.Screen
@@ -58,40 +58,33 @@ const Tabs = ({ theme }) => {
     </Tab.Navigator>
   );
 };
-import { useState, useEffect } from 'react';
+
 import { Text } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import { TransitionPresets } from '@react-navigation/stack';
-import SingleChat from '../atoms/SingleChat';
 import ChatScreenDetail from '../screens/ChatScreenDetail';
 import TopBar from '../molecules/TopBar';
-import ButtonBlue from '../atoms/ButtonBlue';
+
 import { TYPE } from '../../redux/actions';
+import ProfileScreen from '../screens/ProfileScreen';
 
 function Home() {
   // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
   const dispatch = useDispatch();
   // Handle user state changes
-  function onAuthStateChanged(user: any) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
   const changeMode = () => {
     dispatch({ type: TYPE.SWITCH_THEME });
   };
-
+  const logOut = () => {
+    dispatch({ type: TYPE.LOGOUT });
+  };
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <TopBar title={'More'} />
       <TouchableOpacity onPress={changeMode}>
         <Text>Change mode</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={logOut}>
+        <Text>Log out</Text>
       </TouchableOpacity>
     </View>
   );

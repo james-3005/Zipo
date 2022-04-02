@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "686282567535-0uv0l7ch15j9n6l7jivq952tllju3crk.apps.googleusercontent.com",
+          "client_id": "686282567535-ldnsqi02rn55ve1igr09l482hsc8vq06.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.zipo",
-            "certificate_hash": "44c15c91c953cbed1099fbc6953522d67a2ce9e3"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

@@ -47,9 +47,8 @@
   background-color: $offWhite;
 }
 .containerFilterName {
-  width: 90%;
+  width: 95%;
   position: relative;
-  margin-top: 3%;
 }
 .filterName {
   width: 100%;
@@ -92,11 +91,9 @@
 }
 .name {
   font-family: $Mulish-600;
-  color: $active;
 }
 .chat {
   font-size: 12px;
-  color: $disabled;
 }
 .noti {
   align-items: center;

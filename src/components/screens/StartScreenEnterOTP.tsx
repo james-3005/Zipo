@@ -1,8 +1,7 @@
-import React, { ElementRef } from 'react';
+import React from 'react';
 import {
   Keyboard,
   Platform,
-  Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
