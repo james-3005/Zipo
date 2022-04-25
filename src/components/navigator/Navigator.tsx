@@ -42,7 +42,13 @@ const Navigator: FC<NavigatorProps> = (props: NavigatorProps) => {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer>
-          {props.$store.isLog ? <BottomNavigator /> : <StartNavigator />}
+          {props.$store.isLog ? (
+            <>
+              <BottomNavigator />
+            </>
+          ) : (
+            <StartNavigator />
+          )}
         </NavigationContainer>
       </SafeAreaView>
     </AnimatedSplash>

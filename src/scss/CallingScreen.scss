@@ -1,3 +1,66 @@
 @import 'app';
 .container {
+  // background-color: $active;
+  flex: 1;
+  // align-items: center;
+  position: absolute;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+}
+.action1 {
+  flex-direction: row;
+  width: 70%;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 15%;
+  align-self: center;
+  z-index: 10;
+}
+.buttonSmall {
+  width: 50px;
+  height: 50px;
+  background-color: #fff3;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+
+.action2 {
+  flex-direction: row;
+  width: 82%;
+  justify-content: center;
+  position: absolute;
+  bottom: 4%;
+  align-self: center;
+  z-index: 10;
+}
+.buttonMedium {
+  flex-direction: row;
+  width: 137px;
+  height: 50px;
+  background-color: #fff3;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+.text {
+  color: $white;
+  margin-left: 5px;
+}
+.localStream {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  // transform: scaleX(-1);
+  z-index: 1;
+}
+.remoteStream {
+  position: absolute;
+  width: 130px;
+  height: 200px;
+  justify-self: flex-start;
+  margin: 5px 0 0 5px;
+  z-index: 10;
+  // transform: scaleX(-1);
 }

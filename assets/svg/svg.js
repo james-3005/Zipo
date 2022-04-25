@@ -19,6 +19,16 @@ import Sent from './sent';
 import Phone from './phone';
 import Camera from './camera';
 import FolderPicture from './folderPicture';
+import FlipCamera from './flipCamera';
+import MicOff from './micOff';
+import MicOn from './micOn';
+import SoundOn from './soundOn';
+import SoundOff from './soundOff';
+import VideoOff from './videoOff';
+import VideoOn from './videoOn';
+import X from './x';
+import StopTheCall from './stopTheCall.js';
+import CatchTheCall from './catchTheCall';
 export default {
   Heart1,
   Mess1,
@@ -40,4 +50,14 @@ export default {
   Phone,
   Camera,
   FolderPicture,
+  FlipCamera,
+  MicOn,
+  MicOff,
+  SoundOn,
+  SoundOff,
+  VideoOff,
+  VideoOn,
+  X,
+  StopTheCall,
+  CatchTheCall,
 };

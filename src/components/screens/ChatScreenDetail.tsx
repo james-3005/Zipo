@@ -1,11 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import styles from '../../scss/ChatScreenDetail.scss';
 import { useSelector, connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
@@ -17,6 +11,17 @@ import db from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { EMOTION, GET_REQUIRE, TO_MOMENT } from '../../utilities/common';
 import LottieView from 'lottie-react-native';
+import {
+  MediaStream,
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription,
+} from 'react-native-webrtc';
+import IncomingCall from '../molecules/IncomingCall';
+import CallingScreen from './CallingScreen';
+import Utils from '../../utilities/call';
+
+const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 const ChatScreenDetail: FC<ChatScreenDetailProps> = (
   props: ChatScreenDetailProps,
 ) => {
@@ -30,8 +35,185 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
   const [partnerUser, setPartnerUser] = useState({});
   const [showExtend, setShowExtend] = useState(false);
   const inputRef = useRef();
+  const [muteLocal, setMuteLocal] = useState(false);
+  const [muteRemote, setMuteRemote] = useState(false);
+  const [localVideo, setLocalVideo] = useState(false);
+  // rtc
+  const [localStream, setLocalStream] = useState<MediaStream | null>();
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>();
+  const [gettingCall, setGettingCall] = useState(false);
+  const [user, setUser] = useState('');
+  const pc = useRef<RTCPeerConnection>();
+  const connecting = useRef(false);
+  //
+  useEffect(() => {
+    const cRef = db().collection('meet').doc('chatId');
+    const subscribe = cRef.onSnapshot((snapshot) => {
+      const data = snapshot.data();
+      if (pc.current && !pc.current.remoteDescription && data && data.answer) {
+        pc.current.setRemoteDescription(new RTCSessionDescription(data.answer));
+      }
+      if (data && data.offer && !connecting.current) {
+        setGettingCall(true);
+      } else {
+        setGettingCall(false);
+      }
+    });
+    const subscribeDelete = cRef.collection('callee').onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'removed') {
+          hangup();
+        }
+      });
+    });
+    return () => {
+      subscribe();
+      subscribeDelete();
+    };
+  }, []);
+  const setupWebrtc = async () => {
+    pc.current = new RTCPeerConnection(configuration);
+    const stream = await Utils.getStream();
+    if (stream) {
+      setLocalStream(stream);
+
+      setLocalVideo(true);
+      pc.current.addStream(stream);
+    }
+    pc.current.onaddstream = (e: any) => {
+      setRemoteStream(e.stream);
+      db()
+        .collection('meet')
+        .doc('chatId')
+        .update({ caller: true, callee: true });
+    };
+  };
+  const create = async () => {
+    setUser('caller');
+    connecting.current = true;
+    await setupWebrtc();
+    const cRef = db().collection('meet').doc('chatId');
+    collectIceCandidates(cRef, 'caller', 'callee');
+    if (pc.current) {
+      const offer = await pc.current.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true,
+      });
+      pc.current.setLocalDescription(offer);
+      const cWithOffer = {
+        offer: {
+          type: offer.type,
+          sdp: offer.sdp,
+        },
+      };
+      cRef.set(cWithOffer);
+    }
+  };
+  const join = async () => {
+    connecting.current = true;
+    setGettingCall(false);
+    setUser('callee');
+    const cRef = db().collection('meet').doc('chatId');
+    const offer = (await cRef.get()).data()?.offer;
+    if (offer) {
+      await setupWebrtc();
+      collectIceCandidates(cRef, 'callee', 'caller');
+      if (pc.current) {
+        pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await pc.current.createAnswer();
+        pc.current.setLocalDescription(answer);
+        const cWithAnswer = {
+          answer: {
+            type: answer.type,
+            sdp: answer.sdp,
+          },
+        };
+        cRef.update(cWithAnswer);
+      }
+    }
+  };
+  const hangup = async () => {
+    setGettingCall(false);
+    connecting.current = false;
+    streamCleanUp();
+    firestoreCleanUp();
+    if (pc.current) {
+      pc.current.close();
+    }
+  };
+  const streamCleanUp = async () => {
+    if (localStream) {
+      localStream.getTracks().forEach((t) => t.stop());
+      localStream.release();
+    }
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+  const firestoreCleanUp = async () => {
+    const cRef = db().collection('meet').doc('chatId');
+    if (cRef) {
+      const calleeCandidate = await cRef.collection('callee').get();
+      calleeCandidate.forEach(async (candidate) => {
+        await candidate.ref.delete();
+      });
+      const callerCandidate = await cRef.collection('caller').get();
+      callerCandidate.forEach(async (candidate) => {
+        await candidate.ref.delete();
+      });
+      cRef.delete();
+    }
+  };
+  const setMuteLocalCustom = () => {
+    if (localStream) {
+      const newStream = localStream;
+      const isMute = muteLocal;
+      setMuteLocal(!isMute);
+      newStream.getAudioTracks()[0].enabled = isMute;
+      setLocalStream(newStream);
+    }
+  };
+  const setMuteRemoteCustom = () => {
+    if (remoteStream) {
+      const newStream = remoteStream;
+      const isMute = muteRemote;
+      setMuteRemote(!isMute);
+      newStream.getAudioTracks()[0].enabled = isMute;
+      setRemoteStream(newStream);
+    }
+  };
+  const setMuteVideo = () => {
+    db()
+      .collection('meet')
+      .doc('chatId')
+      .update({ [user]: !localVideo });
+    setLocalVideo(!localVideo);
+  };
   const navigateBack = () => {
     props.navigation.navigate('chat');
+  };
+
+  const collectIceCandidates = async (
+    cRef: any,
+    localName: String,
+    remoteName: String,
+  ) => {
+    const candidateCollection = cRef.collection(localName);
+    if (pc.current) {
+      pc.current.onicecandidate = (e: any) => {
+        if (e.candidate) {
+          candidateCollection.add(e.candidate);
+        }
+      };
+    }
+
+    cRef.collection(remoteName).onSnapshot((snapshot: any) => {
+      snapshot.docChanges().forEach((change: any) => {
+        if (change.type == 'added') {
+          const candidate = new RTCIceCandidate(change.doc.data());
+          pc.current?.addIceCandidate(candidate);
+        }
+      });
+    });
   };
   const getIdChat = async (partnerUserId: string) => {
     setIdChat(
@@ -118,15 +300,36 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
         });
   };
   const choosePicture = () => {};
+  // const call = () => {
+  //   props.navigation.navigate("CallScreen");
+  // };
   return (
     <View style={styles.container}>
+      {gettingCall && <IncomingCall hangup={hangup} join={join} />}
+      {localStream && (
+        <CallingScreen
+          hangup={hangup}
+          localStream={localStream}
+          remoteStream={remoteStream}
+          muteLocal={muteLocal}
+          setMuteLocal={setMuteLocalCustom}
+          muteRemote={muteRemote}
+          setMuteRemote={setMuteRemoteCustom}
+          muteLocalVideo={setMuteVideo}
+          user={user}
+          localVideo={localVideo}
+        />
+      )}
+
       <TopBar
         onPress={navigateBack}
         back={true}
         title={partnerUser.name}
         rightComponent={
           <View style={{ flexDirection: 'row' }}>
-            <Svg.Phone theme={props.$store.theme} />
+            <TouchableOpacity onPress={create}>
+              <Svg.Phone theme={props.$store.theme} />
+            </TouchableOpacity>
             <View style={{ width: 4 }} />
             <Svg.General theme={props.$store.theme} />
           </View>

@@ -46,6 +46,7 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
         pp.sort(function (a, b) {
           return ('' + a.id).localeCompare(b.id);
         });
+
         setPeopleId(pp);
       });
   };
@@ -67,6 +68,7 @@ const ChatScreen: FC<ChatScreenProps> = (props: ChatScreenProps) => {
         pp.sort(function (a, b) {
           return ('' + a.id).localeCompare(b.id);
         });
+
         setPeople(pp);
       });
   };

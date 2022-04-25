@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { LIGHT_THEME, DARK_THEME } from '../../utilities/theme';
 import LottieView from 'lottie-react-native';
+import db from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 class MatchingScreen extends React.Component<
   MatchingScreenProps,
   MatchingScreenState
@@ -24,6 +26,11 @@ class MatchingScreen extends React.Component<
     this.loading = React.createRef();
   }
   toggleSearch = () => {
+    if (this.state.isSearch) {
+      db().collection('pool').doc(auth().currentUser?.uid).delete();
+    } else {
+      db().collection('pool').doc(auth().currentUser?.uid).set({});
+    }
     this.setState(
       { isSearch: !this.state.isSearch, isLoop: !this.state.isLoop },
       () => {
@@ -37,6 +44,56 @@ class MatchingScreen extends React.Component<
       },
     );
   };
+  componentDidMount() {
+    db()
+      .collection('users')
+      .doc(auth().currentUser?.uid)
+      .onSnapshot(async (doc) => {
+        if (doc.data().idMatch) {
+          const partner = await db()
+            .collection('users')
+            .doc(doc.data().idMatch)
+            .get()
+            .then((doc) => doc.data());
+        }
+      });
+    // let bool = true;
+    // const listener = db()
+    //   .collection("pool")
+    //   .onSnapshot(async (doc) => {
+    //     for (let i = 0; i < doc.docs.length; i++) {
+    //       if (!bool) break;
+    //       await db()
+    //         .collection("chats")
+    //         .where(`${auth().currentUser?.uid}.exist`, "==", true)
+    //         .where(`${doc.docs[i].id}.exist`, "==", true)
+    //         .get()
+    //         .then((docs2) => {
+    //           if (docs2.size === 0)
+    //             db()
+    //               .collection("chats")
+    //               .add({
+    //                 [doc.docs[i].id]: {
+    //                   exist: true,
+    //                 },
+    //                 [auth().currentUser?.uid as string]: {
+    //                   exist: true,
+    //                 },
+    //               });
+    //           db()
+    //             .collection("users")
+    //             .doc(auth().currentUser?.uid)
+    //             .update({ idMatch: doc.docs[i].id });
+    //           db()
+    //             .collection("users")
+    //             .doc(doc.docs[i].id)
+    //             .update({ idMatch: auth().currentUser?.uid });
+    //           bool = false;
+    //         });
+    //     }
+    //   });
+    // listener();
+  }
   render() {
     return (
       <View
