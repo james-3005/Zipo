@@ -19,6 +19,14 @@ import Sent from './sent';
 import Phone from './phone';
 import Camera from './camera';
 import FolderPicture from './folderPicture';
+import Account from './account';
+import Appearance from './appearance';
+import Help from './help';
+import Mail from './mail';
+import Privacy from './privacy';
+import ArrowRight from './arrowRight';
+import Line from './line';
+import Avatar from './avatar';
 export default {
   Heart1,
   Mess1,
@@ -40,4 +48,12 @@ export default {
   Phone,
   Camera,
   FolderPicture,
+  Account,
+  Appearance,
+  Help,
+  Mail,
+  Privacy,
+  ArrowRight,
+  Line,
+  Avatar,
 };
