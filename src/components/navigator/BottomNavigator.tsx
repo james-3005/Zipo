@@ -55,6 +55,12 @@ const Tabs = ({ theme }) => {
         component={ChatScreenDetail}
         key="chatScreenDetail"
       />
+      <Tab.Screen
+        name="profileScreen"
+        options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
+        component={ProfileScreen}
+        key="profileScreen"
+      />
     </Tab.Navigator>
   );
 };

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
+import { LIGHT_THEME, DARK_THEME } from '../../src/utilities/theme';
 
 function SvgComponent(props) {
   return (
@@ -14,6 +15,7 @@ function SvgComponent(props) {
       <Path
         d="M7.713 7L1.702.99.288 2.404l4.6 4.6-4.6 4.593 1.414 1.414L7.713 7z"
         fill="#0F1828"
+        stroke={props.theme ? LIGHT_THEME.STROKE_ICON : DARK_THEME.STROKE_ICON}
       />
     </Svg>
   );

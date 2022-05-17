@@ -1,66 +1,91 @@
 import React, { FC, useState } from 'react';
-import { TextStyle, View } from 'react-native';
+import { TextStyle, TouchableOpacity, View } from 'react-native';
 import styles from '../../scss/SettingRow.scss';
-import { useSelector, connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
 import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
 import Text_ from './Text_';
 import Svg from '../../../assets/svg/svg';
-class SettingRow extends React.Component<SettingRowProps, SettingRowState> {
-  constructor(props: SettingRowProps) {
-    super(props);
-  }
+import { TYPE } from '../../redux/actions';
 
-  render() {
-    return (
+const SettingRow: FC<SettingRowProps> = (props: SettingRowProps) => {
+  const [store] = useState<reduxState>(
+    useSelector((state) => state) as reduxState,
+  );
+  const navigateBack = () => {
+    props.navigation.navigate('chat');
+  };
+
+  const dispatch = useDispatch();
+
+  const changeMode = () => {
+    dispatch({ type: TYPE.SWITCH_THEME });
+  };
+
+  const logOut = () => {
+    dispatch({ type: TYPE.LOGOUT });
+  };
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.container,
+        {
+          backgroundColor: props.$store.theme
+            ? LIGHT_THEME.THEME
+            : DARK_THEME.THEME,
+        },
+      ]}
+      onPress={() => {
+        switch (props.text) {
+          case 'Account':
+            navigateBack();
+          case 'Appearance':
+            changeMode();
+          case 'Log out':
+            logOut();
+
+          default:
+        }
+      }}
+    >
       <View
         style={[
-          styles.container,
+          styles.icon,
           {
-            backgroundColor: this.props.$store.theme
+            backgroundColor: props.$store.theme
               ? LIGHT_THEME.THEME
               : DARK_THEME.THEME,
           },
         ]}
       >
-        <View
-          style={[
-            styles.icon,
-            {
-              backgroundColor: this.props.$store.theme
-                ? LIGHT_THEME.THEME
-                : DARK_THEME.THEME,
-            },
-          ]}
-        >
-          {this.props.icon}
-        </View>
-        <Text_
-          style={[
-            styles.text,
-            {
-              backgroundColor: this.props.$store.theme
-                ? LIGHT_THEME.THEME
-                : DARK_THEME.THEME,
-            },
-          ]}
-          text={this.props.text}
-        />
-        <Svg.ArrowRight
-          style={[
-            styles.icon,
-            {
-              backgroundColor: this.props.$store.theme
-                ? LIGHT_THEME.THEME
-                : DARK_THEME.THEME,
-            },
-            styles.ArrowRight,
-          ]}
-        />
+        {props.icon}
       </View>
-    );
-  }
-}
+      <Text_
+        style={[
+          styles.text,
+          {
+            backgroundColor: props.$store.theme
+              ? LIGHT_THEME.THEME
+              : DARK_THEME.THEME,
+          },
+        ]}
+        text={props.text}
+      />
+      <Svg.ArrowRight
+        style={[
+          styles.icon,
+          {
+            backgroundColor: props.$store.theme
+              ? LIGHT_THEME.THEME
+              : DARK_THEME.THEME,
+          },
+          styles.ArrowRight,
+        ]}
+      />
+    </TouchableOpacity>
+  );
+};
 
 function mapStateToProps(state: reduxState) {
   return {
@@ -77,6 +102,6 @@ export interface SettingRowProps {
   text?: String | Number | undefined | Boolean;
   svg?: typeof Svg;
   icon?: any;
+  action?: () => void;
+  navigation?: any;
 }
-
-interface SettingRowState {}
