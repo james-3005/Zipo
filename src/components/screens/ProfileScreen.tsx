@@ -1,5 +1,13 @@
-import React from 'react';
-import { Image, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Alert,
+  Image,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styles from '../../scss/ProfileScreen.scss';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ButtonBlue from '../atoms/ButtonBlue';
@@ -11,13 +19,16 @@ import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
 import { reduxState } from '../../redux/reducer';
 import { connect } from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
+import initializeApp from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+import storage, { firebase } from '@react-native-firebase/storage';
+import AvatarSheet from '../molecules/AvatarSheet';
+import BottomSheetBehavior from 'reanimated-bottom-sheet';
 
 class ProfileScreen extends React.Component<
   ProfileScreenProps,
   ProfileScreenState
 > {
-  subcriber: any;
   constructor(props: ProfileScreenProps) {
     super(props);
     this.state = {
@@ -29,8 +40,9 @@ class ProfileScreen extends React.Component<
         avatar:
           'https://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg',
       },
+      image: null,
     };
-    this.subcriber = firestore()
+    firestore()
       .collection('users')
       .doc(auth().currentUser?.uid)
       .onSnapshot((doc) => {
@@ -47,14 +59,33 @@ class ProfileScreen extends React.Component<
       });
   }
 
-  // getUser = async () => {
-  //   const userDocument = await firestore().collection("users").doc(USER_ID).get();
-  //   console.log(userDocument.data());
-  // }
-
   onChange = (event: Event, selectedDate: Date | undefined | null) => {
     const date = selectedDate || this.state.date;
     this.setState({ date, openDate: false });
+  };
+
+  setImage = (image: any) => {
+    this.setState({
+      image: image,
+    });
+  };
+
+  sheetRef = React.createRef<BottomSheetBehavior>();
+
+  saveChange = async () => {
+    const uploadUri = this.state.image as string;
+
+    try {
+      firestore().collection('users').doc(auth().currentUser?.uid).update({
+        avatar: uploadUri,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    this.setState({
+      image: null,
+    });
   };
   render() {
     return (
@@ -76,55 +107,36 @@ class ProfileScreen extends React.Component<
           }
           back={true}
           title={'Account'}
+          onPress={() => {
+            this.saveChange();
+          }}
         />
         <View style={{ marginTop: '45%' }}>
-          <Image
-            source={{ uri: this.state.user.avatar }}
-            style={[
-              styles.avatar,
-              {
-                borderRadius: 1000,
-              },
-            ]}
-          />
+          <TouchableOpacity onPress={() => this.sheetRef.current?.snapTo(0)}>
+            <Image
+              source={{
+                uri: this.state.image
+                  ? this.state.image
+                  : this.state.user.avatar,
+              }}
+              style={[
+                styles.avatar,
+                {
+                  borderRadius: 1000,
+                },
+              ]}
+            />
+            <Text_ style={styles.text} text={'Chose avatar'} />
+          </TouchableOpacity>
         </View>
         <View style={styles.formItem}>
-          <TextInput
-            style={styles.textInput}
-            placeholder={this.state.user.name}
-            placeholderTextColor="#A4A4A4"
-          />
-          {/* <View style={[styles.formItemDob]}>
-            <TextInput
-              style={styles.textInput}
-              placeholderTextColor="#A4A4A4"
-              editable={false}
-              selectTextOnFocus={false}
-              value={
-                this.state.date
-                  ? moment(this.state.date).format('DD-MM-YYYY')
-                  : ''
-              }
-              placeholder="Date of birth"
-            />
-            <TouchableOpacity
-              onPress={() => this.setState({ openDate: true })}
-              style={styles.calendar}
-            >
-              <Svg.Calendar />
-            </TouchableOpacity>
-          </View> */}
+          <TextInput style={styles.textInput} value={this.state.user.name} />
 
           <View style={[styles.formItem, styles.row]}>
             <View style={styles.rowCheckbox}>
               <Text_ text={'Male'} />
             </View>
-            <View
-              style={[
-                // styles.rowCheckbox,
-                styles.switch,
-              ]}
-            >
+            <View style={[styles.switch]}>
               <Switch style={styles.switch} />
             </View>
             <View style={styles.rowCheckbox}>
@@ -132,18 +144,17 @@ class ProfileScreen extends React.Component<
             </View>
           </View>
         </View>
-        {this.state.openDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={this.state.date || new Date()}
-            mode={'date'}
-            display="default"
-            onChange={this.onChange}
-            themeVariant="light"
-          />
-        )}
-
-        <ButtonBlue text={'Save'} />
+        <AvatarSheet
+          user={this.state.user}
+          sheetRef={this.sheetRef}
+          setImage={this.setImage}
+        />
+        <ButtonBlue
+          text={'Save'}
+          onPress={() => {
+            this.saveChange;
+          }}
+        />
       </View>
     );
   }
@@ -169,4 +180,5 @@ interface ProfileScreenState {
     name: string;
     avatar: string;
   };
+  image: any;
 }
