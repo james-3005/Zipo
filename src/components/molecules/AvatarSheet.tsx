@@ -1,7 +1,5 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
-  Button,
-  Image,
   PermissionsAndroid,
   Platform,
   Text,
@@ -17,14 +15,84 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../utilities/firebase';
+import { async } from '@firebase/util';
 
 const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
   const [store] = useState<reduxState>(
     useSelector((state) => state) as reduxState,
   );
+
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    const uploadImage = async () => {
+      let result = await fetch(image);
+      const name = new Date().getTime() + image;
+      const storageRef = ref(storage, name);
+      const uploadTask = uploadBytesResumable(storageRef, await result.blob());
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            props.setImage(downloadURL);
+          });
+        },
+      );
+    };
+    image && uploadImage();
+  }, [image]);
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else return true;
+  };
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+      }
+      return false;
+    } else return true;
+  };
 
   const captureImage = async () => {
     let options = {
@@ -35,12 +103,16 @@ const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
       saveToPhotos: true,
       cropping: true,
     };
-    launchCamera(options, (response) => {
-      if (response.assets) {
-        console.log('Response = ', response.assets[0]);
-        props.setImage(response.assets[0].uri);
-      }
-    });
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted && isStoragePermitted) {
+      launchCamera(options, (response) => {
+        console.log(response);
+        if (response.assets) {
+          setImage(response.assets[0].uri ? response.assets[0].uri : '');
+        }
+      });
+    }
   };
 
   const chooseFile = () => {
@@ -53,8 +125,7 @@ const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
     };
     launchImageLibrary(options, (response) => {
       if (response.assets) {
-        console.log('Response = ', response.assets[0]);
-        props.setImage(response.assets[0].uri);
+        setImage(response.assets[0].uri ? response.assets[0].uri : '');
       }
     });
   };

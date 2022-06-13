@@ -1,27 +1,16 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  Image,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../scss/ProfileScreen.scss';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import ButtonBlue from '../atoms/ButtonBlue';
 import Svg from '../../../assets/svg/svg';
-import moment from 'moment';
 import Text_ from '../atoms/Text_';
 import TopBar from '../molecules/TopBar';
 import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
 import { reduxState } from '../../redux/reducer';
 import { connect } from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
-import initializeApp from '@react-native-firebase/app';
+import { doc, updateDoc } from 'firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import storage, { firebase } from '@react-native-firebase/storage';
 import AvatarSheet from '../molecules/AvatarSheet';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 
@@ -32,15 +21,17 @@ class ProfileScreen extends React.Component<
   constructor(props: ProfileScreenProps) {
     super(props);
     this.state = {
-      gender: null,
+      gender: true,
       date: null,
       openDate: false,
       user: {
         name: '',
         avatar:
           'https://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg',
+        gender: true,
       },
-      image: null,
+      imageUrl: '',
+      newName: '',
     };
     firestore()
       .collection('users')
@@ -48,43 +39,43 @@ class ProfileScreen extends React.Component<
       .onSnapshot((doc) => {
         if (doc.exists) {
           this.setState({
+            gender: doc.data()?.gender,
             user: {
               name: doc.data()?.name,
               avatar: doc.data()?.avatar
                 ? doc.data()?.avatar
                 : 'https://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg',
+              gender: doc.data()?.gender,
             },
           });
         }
       });
   }
 
-  onChange = (event: Event, selectedDate: Date | undefined | null) => {
-    const date = selectedDate || this.state.date;
-    this.setState({ date, openDate: false });
-  };
-
-  setImage = (image: any) => {
+  setImage = (url: string) => {
     this.setState({
-      image: image,
+      imageUrl: url,
     });
   };
 
   sheetRef = React.createRef<BottomSheetBehavior>();
 
-  saveChange = async () => {
-    const uploadUri = this.state.image as string;
-
-    try {
-      firestore().collection('users').doc(auth().currentUser?.uid).update({
-        avatar: uploadUri,
+  saveChange = () => {
+    const uploadUri = this.state.imageUrl;
+    const newName = this.state.newName;
+    const newGender = this.state.gender;
+    firestore()
+      .collection('users')
+      .doc(auth().currentUser?.uid)
+      .update({
+        avatar: uploadUri === '' ? this.state.user.avatar : uploadUri,
+        name: newName === '' ? this.state.user.name : newName,
+        gender: newGender,
       });
-    } catch (e) {
-      console.log(e);
-    }
 
     this.setState({
-      image: null,
+      imageUrl: '',
+      newName: '',
     });
   };
   render() {
@@ -107,16 +98,13 @@ class ProfileScreen extends React.Component<
           }
           back={true}
           title={'Account'}
-          onPress={() => {
-            this.saveChange();
-          }}
         />
         <View style={{ marginTop: '45%' }}>
           <TouchableOpacity onPress={() => this.sheetRef.current?.snapTo(0)}>
             <Image
               source={{
-                uri: this.state.image
-                  ? this.state.image
+                uri: this.state.imageUrl
+                  ? this.state.imageUrl
                   : this.state.user.avatar,
               }}
               style={[
@@ -126,18 +114,34 @@ class ProfileScreen extends React.Component<
                 },
               ]}
             />
-            <Text_ style={styles.text} text={'Chose avatar'} />
+            <Text_ style={styles.text} text={'Choose avatar'} />
           </TouchableOpacity>
         </View>
         <View style={styles.formItem}>
-          <TextInput style={styles.textInput} value={this.state.user.name} />
+          <TextInput
+            style={styles.textInput}
+            defaultValue={this.state.user.name}
+            onChangeText={(newText) =>
+              this.setState({
+                newName: newText,
+              })
+            }
+          />
 
           <View style={[styles.formItem, styles.row]}>
             <View style={styles.rowCheckbox}>
               <Text_ text={'Male'} />
             </View>
             <View style={[styles.switch]}>
-              <Switch style={styles.switch} />
+              <Switch
+                style={styles.switch}
+                value={this.state.gender}
+                onValueChange={(value) =>
+                  this.setState({
+                    gender: value,
+                  })
+                }
+              />
             </View>
             <View style={styles.rowCheckbox}>
               <Text_ text={'Female'} />
@@ -152,7 +156,7 @@ class ProfileScreen extends React.Component<
         <ButtonBlue
           text={'Save'}
           onPress={() => {
-            this.saveChange;
+            this.saveChange();
           }}
         />
       </View>
@@ -174,11 +178,13 @@ export interface ProfileScreenProps {
 
 interface ProfileScreenState {
   openDate: Boolean;
-  gender: String | null;
   date: Date | null;
   user: {
     name: string;
     avatar: string;
+    gender: boolean;
   };
-  image: any;
+  gender: boolean;
+  imageUrl: string;
+  newName: string;
 }

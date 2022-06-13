@@ -66,7 +66,7 @@ class SettingScreen extends React.Component<
               <Svg.Notification theme={this.props.$store.theme} />
             </View>
           }
-          title={'More'}
+          title={'Setting'}
         />
         <View
           style={[
