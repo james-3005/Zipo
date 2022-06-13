@@ -55,8 +55,6 @@
 .emotionList {
   background-color: $white;
   padding: 5px;
-  // width: 80%;
-  // border: 1px solid black
 }
 .camera {
   width: 50px;
@@ -64,4 +62,7 @@
   margin-right: 8px;
   justify-content: center;
   align-items: center;
+}
+.imagePerson {
+  border-radius: 8px;
 }

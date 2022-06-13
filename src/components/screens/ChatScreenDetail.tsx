@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Image,
+} from 'react-native';
 import styles from '../../scss/ChatScreenDetail.scss';
 import { useSelector, connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
@@ -358,7 +364,7 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
                 like={item.like}
                 doubleTap={() => toggleLike(item, item.like)}
               />
-            ) : (
+            ) : item.emotion ? (
               <View
                 style={[
                   item.userId === senderId
@@ -371,6 +377,23 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
                   loop={true}
                   style={styles.emotion}
                   autoPlay
+                />
+              </View>
+            ) : (
+              <View
+                style={[
+                  item.userId === senderId
+                    ? styles.emotionSideSender
+                    : styles.emotionSideReceiver,
+                ]}
+              >
+                <Image
+                  source={{
+                    width: 200,
+                    height: 250,
+                    uri: item.image,
+                  }}
+                  style={styles.imagePerson}
                 />
               </View>
             )

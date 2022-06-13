@@ -29,6 +29,7 @@ import VideoOn from './videoOn';
 import X from './x';
 import StopTheCall from './stopTheCall.js';
 import CatchTheCall from './catchTheCall';
+import LargeX from './largeX';
 export default {
   Heart1,
   Mess1,
@@ -60,4 +61,5 @@ export default {
   X,
   StopTheCall,
   CatchTheCall,
+  LargeX,
 };
