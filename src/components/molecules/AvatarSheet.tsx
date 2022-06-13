@@ -15,12 +15,10 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import ImagePicker from 'react-native-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
 import 'react-native-gesture-handler';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utilities/firebase';
-import { async } from '@firebase/util';
 
 const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
   const [store] = useState<reduxState>(

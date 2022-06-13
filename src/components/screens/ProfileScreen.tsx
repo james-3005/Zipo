@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../../scss/ProfileScreen.scss';
 import ButtonBlue from '../atoms/ButtonBlue';
@@ -9,7 +9,6 @@ import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
 import { reduxState } from '../../redux/reducer';
 import { connect } from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
-import { doc, updateDoc } from 'firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import AvatarSheet from '../molecules/AvatarSheet';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
