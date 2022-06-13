@@ -1,5 +1,12 @@
 import React from 'react';
-import { Image, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Switch,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styles from '../../scss/ProfileScreen.scss';
 import ButtonBlue from '../atoms/ButtonBlue';
 import Svg from '../../../assets/svg/svg';
@@ -32,6 +39,8 @@ class ProfileScreen extends React.Component<
       imageUrl: '',
       newName: '',
     };
+  }
+  componentDidMount() {
     firestore()
       .collection('users')
       .doc(auth().currentUser?.uid)
@@ -50,13 +59,14 @@ class ProfileScreen extends React.Component<
         }
       });
   }
-
   setImage = (url: string) => {
     this.setState({
       imageUrl: url,
     });
   };
-
+  navigateBack = () => {
+    this.props.navigation.navigate('setting');
+  };
   sheetRef = React.createRef<BottomSheetBehavior>();
 
   saveChange = () => {
@@ -89,15 +99,7 @@ class ProfileScreen extends React.Component<
           },
         ]}
       >
-        <TopBar
-          rightComponent={
-            <View>
-              <Svg.Notification theme={this.props.$store.theme} />
-            </View>
-          }
-          back={true}
-          title={'Account'}
-        />
+        <TopBar back={true} title={'Account'} onPress={this.navigateBack} />
         <View style={{ marginTop: '45%' }}>
           <TouchableOpacity onPress={() => this.sheetRef.current?.snapTo(0)}>
             <Image
@@ -116,9 +118,28 @@ class ProfileScreen extends React.Component<
             <Text_ style={styles.text} text={'Choose avatar'} />
           </TouchableOpacity>
         </View>
-        <View style={styles.formItem}>
+        <View
+          style={[
+            styles.formItem,
+            {
+              backgroundColor: this.props.$store.theme
+                ? LIGHT_THEME.THEME
+                : DARK_THEME.THEME,
+            },
+          ]}
+        >
           <TextInput
-            style={styles.textInput}
+            style={[
+              styles.textInput,
+              {
+                backgroundColor: this.props.$store.theme
+                  ? LIGHT_THEME.INPUT_COLOR
+                  : DARK_THEME.INPUT_COLOR,
+                color: this.props.$store.theme
+                  ? LIGHT_THEME.PLACE_HOLDER
+                  : DARK_THEME.PLACE_HOLDER,
+              },
+            ]}
             defaultValue={this.state.user.name}
             onChangeText={(newText) =>
               this.setState({
@@ -126,7 +147,6 @@ class ProfileScreen extends React.Component<
               })
             }
           />
-
           <View style={[styles.formItem, styles.row]}>
             <View style={styles.rowCheckbox}>
               <Text_ text={'Male'} />
@@ -152,6 +172,7 @@ class ProfileScreen extends React.Component<
           sheetRef={this.sheetRef}
           setImage={this.setImage}
         />
+
         <ButtonBlue
           text={'Save'}
           onPress={() => {
@@ -173,6 +194,7 @@ export default connect(mapStateToProps)(ProfileScreen);
 
 export interface ProfileScreenProps {
   $store: reduxState;
+  navigation: any;
 }
 
 interface ProfileScreenState {

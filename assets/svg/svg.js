@@ -27,6 +27,7 @@ import Privacy from './privacy';
 import ArrowRight from './arrowRight';
 import Line from './line';
 import Avatar from './avatar';
+import Logout from './logout';
 export default {
   Heart1,
   Mess1,
@@ -56,4 +57,5 @@ export default {
   ArrowRight,
   Line,
   Avatar,
+  Logout,
 };

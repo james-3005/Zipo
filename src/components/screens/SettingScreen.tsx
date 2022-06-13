@@ -111,6 +111,7 @@ class SettingScreen extends React.Component<
           <SettingRow
             text={'Account'}
             icon={<Svg.Account theme={this.props.$store.theme} />}
+            navigation={this.props.navigation}
           />
           <Svg.Line style={[styles.line]} />
           <SettingRow
@@ -134,7 +135,10 @@ class SettingScreen extends React.Component<
             text={'Invite friends'}
             icon={<Svg.Mail theme={this.props.$store.theme} />}
           />
-          <SettingRow text={'Log out'} />
+          <SettingRow
+            text={'Log out'}
+            icon={<Svg.Logout theme={this.props.$store.theme} />}
+          />
         </View>
       </View>
     );

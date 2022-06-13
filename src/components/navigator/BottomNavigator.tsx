@@ -34,7 +34,7 @@ const Tabs = ({ theme }) => {
       <Tab.Screen
         name="setting"
         options={{ headerShown: false }}
-        component={ProfileScreen}
+        component={SettingScreen}
         key="setting"
       />
       <Tab.Screen

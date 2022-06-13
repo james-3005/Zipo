@@ -13,7 +13,7 @@ const SettingRow: FC<SettingRowProps> = (props: SettingRowProps) => {
     useSelector((state) => state) as reduxState,
   );
   const navigateBack = () => {
-    props.navigation.navigate('chat');
+    props.navigation.navigate('profileScreen');
   };
 
   const dispatch = useDispatch();
@@ -38,13 +38,19 @@ const SettingRow: FC<SettingRowProps> = (props: SettingRowProps) => {
       ]}
       onPress={() => {
         switch (props.text) {
-          case 'Account':
+          case 'Account': {
             navigateBack();
-          case 'Appearance':
+            break;
+          }
+          case 'Appearance': {
             changeMode();
-          case 'Log out':
-            logOut();
+            break;
+          }
 
+          case 'Log out': {
+            logOut();
+            break;
+          }
           default:
         }
       }}
@@ -73,15 +79,8 @@ const SettingRow: FC<SettingRowProps> = (props: SettingRowProps) => {
         text={props.text}
       />
       <Svg.ArrowRight
-        style={[
-          styles.icon,
-          {
-            backgroundColor: props.$store.theme
-              ? LIGHT_THEME.THEME
-              : DARK_THEME.THEME,
-          },
-          styles.ArrowRight,
-        ]}
+        style={[styles.icon, styles.ArrowRight]}
+        theme={props.$store.theme}
       />
     </TouchableOpacity>
   );
