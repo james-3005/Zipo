@@ -30,6 +30,15 @@ import X from './x';
 import StopTheCall from './stopTheCall.js';
 import CatchTheCall from './catchTheCall';
 import LargeX from './largeX';
+import Account from './account';
+import Appearance from './appearance';
+import Help from './help';
+import Mail from './mail';
+import Privacy from './privacy';
+import ArrowRight from './arrowRight';
+import Line from './line';
+import Avatar from './avatar';
+import Logout from './logout';
 export default {
   Heart1,
   Mess1,
@@ -62,4 +71,13 @@ export default {
   StopTheCall,
   CatchTheCall,
   LargeX,
+  Account,
+  Appearance,
+  Help,
+  Mail,
+  Privacy,
+  ArrowRight,
+  Line,
+  Avatar,
+  Logout,
 };

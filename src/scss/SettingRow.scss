@@ -1,0 +1,17 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 3;
+  flex-direction: row;
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  align-items: center;
+}
+
+.text {
+  width: 300px;
+}

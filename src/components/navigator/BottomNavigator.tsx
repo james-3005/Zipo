@@ -34,7 +34,7 @@ const Tabs = ({ theme }) => {
       <Tab.Screen
         name="setting"
         options={{ headerShown: false }}
-        component={Home}
+        component={SettingScreen}
         key="setting"
       />
       <Tab.Screen
@@ -56,10 +56,10 @@ const Tabs = ({ theme }) => {
         key="chatScreenDetail"
       />
       <Tab.Screen
-        name="CallScreen"
+        name="profileScreen"
         options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
-        component={CallingScreen}
-        key="CallScreen"
+        component={ProfileScreen}
+        key="profileScreen"
       />
     </Tab.Navigator>
   );
@@ -71,7 +71,7 @@ import TopBar from '../molecules/TopBar';
 
 import { TYPE } from '../../redux/actions';
 import ProfileScreen from '../screens/ProfileScreen';
-import CallingScreen from '../screens/CallingScreen';
+import SettingScreen from '../screens/SettingScreen';
 
 function Home() {
   // Set an initializing state whilst Firebase connects

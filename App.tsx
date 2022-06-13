@@ -6,14 +6,15 @@ import { Provider } from 'react-redux';
 import { LogBox } from 'react-native';
 import thunk from 'redux-thunk';
 import Navigator from './src/components/navigator/Navigator';
-LogBox.ignoreLogs([
-  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
-  'Non-serializable values were found in the navigation state',
-  'Require cycle',
-  'Error: [auth/no-current-user] No user currently signed in.',
-  'Error: PeerConnection not found',
-  'Possible Unhandled Promise Rejection',
-]);
+// LogBox.ignoreLogs([
+//   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+//   'Non-serializable values were found in the navigation state',
+//   'Require cycle',
+//   'Error: [auth/no-current-user] No user currently signed in.',
+//   'Error: PeerConnection not found',
+//   'Possible Unhandled Promise Rejection',
+// ]);
+LogBox.ignoreAllLogs();
 const App = () => {
   const store = createStore(Reducer as any, applyMiddleware(thunk));
   // dark  : "#262626"

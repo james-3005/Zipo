@@ -1,0 +1,31 @@
+@import 'app';
+.container {
+  background-color: $white;
+  flex: 3;
+  align-items: center;
+}
+
+.accountDataContainer {
+  // height: 66px;
+  width: 375px;
+  padding: 16px;
+  align-items: center;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.menuContainer {
+  width: 375px;
+  height: 350px;
+  padding: 16px;
+}
+
+.line {
+  margin-bottom: 20px;
+}
