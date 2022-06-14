@@ -55,29 +55,31 @@ const SettingRow: FC<SettingRowProps> = (props: SettingRowProps) => {
         }
       }}
     >
-      <View
-        style={[
-          styles.icon,
-          {
-            backgroundColor: props.$store.theme
-              ? LIGHT_THEME.THEME
-              : DARK_THEME.THEME,
-          },
-        ]}
-      >
-        {props.icon}
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={[
+            styles.icon,
+            {
+              backgroundColor: props.$store.theme
+                ? LIGHT_THEME.THEME
+                : DARK_THEME.THEME,
+            },
+          ]}
+        >
+          {props.icon}
+        </View>
+        <Text_
+          style={[
+            styles.text,
+            {
+              backgroundColor: props.$store.theme
+                ? LIGHT_THEME.THEME
+                : DARK_THEME.THEME,
+            },
+          ]}
+          text={props.text}
+        />
       </View>
-      <Text_
-        style={[
-          styles.text,
-          {
-            backgroundColor: props.$store.theme
-              ? LIGHT_THEME.THEME
-              : DARK_THEME.THEME,
-          },
-        ]}
-        text={props.text}
-      />
       <Svg.ArrowRight
         style={[styles.icon, styles.ArrowRight]}
         theme={props.$store.theme}

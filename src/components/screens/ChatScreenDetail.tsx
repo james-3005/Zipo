@@ -174,7 +174,7 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
       const newStream = localStream;
       const isMute = muteLocal;
       setMuteLocal(!isMute);
-      newStream.getAudioTracks()[0].enabled = isMute;
+      // newStream.getAudioTracks()[0].enabled = isMute;
       setLocalStream(newStream);
     }
   };
@@ -183,7 +183,7 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
       const newStream = remoteStream;
       const isMute = muteRemote;
       setMuteRemote(!isMute);
-      newStream.getAudioTracks()[0].enabled = isMute;
+      // console.log(newStream.getAudioTracks());
       setRemoteStream(newStream);
     }
   };

@@ -8,6 +8,7 @@ import ButtonBlue from '../atoms/ButtonBlue';
 import LottieView from 'lottie-react-native';
 import { TYPE } from '../../redux/actions';
 import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
+import db from '@react-native-firebase/firestore';
 const StartScreenCheckUser: FC<StartScreenCheckUserProps> = (
   props: StartScreenCheckUserProps,
 ) => {
@@ -21,6 +22,19 @@ const StartScreenCheckUser: FC<StartScreenCheckUserProps> = (
   }, []);
 
   const navigate = () => {
+    if (isNewUser) {
+      db()
+        .collection('users')
+        .doc(props.navigation.route.params.user.user.uid)
+        .set({
+          avatar:
+            'https://genvita.vn/resources/avatar/436fd1ac-626d-4572-aa08-d0d49f079122?width=119&height=119&mode=crop',
+          gender: true,
+          idMatch: null,
+          id: props.navigation.route.params.user.user.uid,
+          name: '',
+        });
+    }
     dispatch({ type: TYPE.LOGIN });
   };
   return (

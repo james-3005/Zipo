@@ -3,6 +3,7 @@
   background-color: $white;
   flex: 3;
   align-items: center;
+  padding: 0 2%;
 }
 
 .accountDataContainer {
@@ -21,11 +22,14 @@
 }
 
 .menuContainer {
-  width: 375px;
-  height: 350px;
+  width: 100%;
+  height: 380px;
   padding: 16px;
 }
 
 .line {
   margin-bottom: 20px;
+  width: 100%;
+  border-color: $line;
+  border-style: solid;
 }

@@ -113,7 +113,7 @@ class SettingScreen extends React.Component<
             icon={<Svg.Account theme={this.props.$store.theme} />}
             navigation={this.props.navigation}
           />
-          <Svg.Line style={[styles.line]} />
+          <View style={[styles.line, { borderBottomWidth: 1 }]} />
           <SettingRow
             text={'Appearance'}
             icon={<Svg.Appearance theme={this.props.$store.theme} />}
@@ -126,7 +126,7 @@ class SettingScreen extends React.Component<
             text={'Privacy'}
             icon={<Svg.Privacy theme={this.props.$store.theme} />}
           />
-          <Svg.Line style={[styles.line]} />
+          <View style={[styles.line, { borderBottomWidth: 1 }]} />
           <SettingRow
             text={'Help'}
             icon={<Svg.Help theme={this.props.$store.theme} />}
@@ -139,6 +139,7 @@ class SettingScreen extends React.Component<
             text={'Log out'}
             icon={<Svg.Logout theme={this.props.$store.theme} />}
           />
+          <View style={[styles.line, { borderBottomWidth: 1 }]} />
         </View>
       </View>
     );
