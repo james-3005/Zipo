@@ -1,24 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-  PermissionsAndroid,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styles from '../../scss/AvatarSheet.scss';
 import { useSelector, connect } from 'react-redux';
 import { reduxState } from '../../redux/reducer';
-import {
-  launchCamera,
-  launchImageLibrary,
-  MediaType,
-  PhotoQuality,
-} from 'react-native-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
 import 'react-native-gesture-handler';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../utilities/firebase';
+import { uploadImage } from '../../utilities/firebase';
+import { captureImage, chooseImage } from '../../utilities/common';
 import { DARK_THEME, LIGHT_THEME } from '../../utilities/theme';
 
 const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
@@ -29,105 +17,8 @@ const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
   const [image, setImage] = useState('');
 
   useEffect(() => {
-    const uploadImage = async () => {
-      let result = await fetch(image);
-      const name = new Date().getTime() + image;
-      const storageRef = ref(storage, name);
-      const uploadTask = uploadBytesResumable(storageRef, await result.blob());
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-          }
-        },
-        (error) => {
-          // Handle unsuccessful uploads
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log('File available at', downloadURL);
-            props.setImage(downloadURL);
-          });
-        },
-      );
-    };
-    image && uploadImage();
+    image && uploadImage(image, props.setImage);
   }, [image]);
-
-  const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        );
-        // If CAMERA Permission is granted
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
-    } else return true;
-  };
-
-  const requestExternalWritePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        );
-        // If WRITE_EXTERNAL_STORAGE Permission is granted
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-      }
-      return false;
-    } else return true;
-  };
-
-  const captureImage = async () => {
-    let options = {
-      mediaType: 'photo' as MediaType,
-      maxWidth: 300,
-      maxHeight: 550,
-      quality: 1 as PhotoQuality,
-      saveToPhotos: true,
-      cropping: true,
-    };
-    let isCameraPermitted = await requestCameraPermission();
-    let isStoragePermitted = await requestExternalWritePermission();
-    if (isCameraPermitted && isStoragePermitted) {
-      launchCamera(options, (response) => {
-        console.log(response);
-        if (response.assets) {
-          setImage(response.assets[0].uri ? response.assets[0].uri : '');
-        }
-      });
-    }
-  };
-
-  const chooseFile = () => {
-    let options = {
-      mediaType: 'photo' as MediaType,
-      maxWidth: 300,
-      maxHeight: 550,
-      quality: 1 as PhotoQuality,
-      cropping: true,
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.assets) {
-        setImage(response.assets[0].uri ? response.assets[0].uri : '');
-      }
-    });
-  };
 
   const renderContent = () => (
     <View
@@ -143,7 +34,7 @@ const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          captureImage();
+          captureImage(setImage);
         }}
       >
         <Text
@@ -162,7 +53,7 @@ const AvatarSheet: FC<AvatarSheetProps> = (props: AvatarSheetProps) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          chooseFile();
+          chooseImage(setImage);
         }}
       >
         <Text

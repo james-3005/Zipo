@@ -26,6 +26,8 @@ import {
 import IncomingCall from '../molecules/IncomingCall';
 import CallingScreen from './CallingScreen';
 import Utils from '../../utilities/call';
+import { uploadImage } from '../../utilities/firebase';
+import { captureImage, chooseImage } from '../../utilities/common';
 
 const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 const ChatScreenDetail: FC<ChatScreenDetailProps> = (
@@ -37,6 +39,8 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
   const [text, setText] = useState('');
   const [idChat, setIdChat] = useState<string>('');
   const [messsage, setMessage] = useState<any>([]);
+  const [image, setImage] = useState('');
+  const [imageURL, setImageURL] = useState('');
   const [senderId, setSenderId] = useState('');
   const [partnerUser, setPartnerUser] = useState({});
   const [showExtend, setShowExtend] = useState(false);
@@ -263,6 +267,24 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
     getAllMessage();
     return;
   }, [idChat]);
+  useEffect(() => {
+    image && uploadImage(image, setImageURL);
+  }, [image]);
+
+  useEffect(() => {
+    async function sendImage() {
+      const time = db.Timestamp.now();
+      await db().collection('chats').doc(idChat).collection('message').add({
+        userId: auth().currentUser?.uid,
+        image: imageURL,
+        time,
+      });
+      // setImage('');
+      // setImageURL('');
+    }
+
+    imageURL && sendImage();
+  }, [imageURL]);
 
   const sendMessage = async () => {
     const time = db.Timestamp.now();
@@ -305,7 +327,6 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
           like: !like,
         });
   };
-  const choosePicture = () => {};
   // const call = () => {
   //   props.navigation.navigate("CallScreen");
   // };
@@ -485,7 +506,7 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
                   <TouchableOpacity
                     style={[styles.camera]}
                     activeOpacity={1}
-                    onPress={choosePicture}
+                    onPress={() => captureImage(setImage)}
                   >
                     <Svg.Camera theme={props.$store.theme} />
                   </TouchableOpacity>
@@ -495,7 +516,7 @@ const ChatScreenDetail: FC<ChatScreenDetailProps> = (
                   <TouchableOpacity
                     style={[styles.camera]}
                     activeOpacity={1}
-                    onPress={choosePicture}
+                    onPress={() => chooseImage(setImage)}
                   >
                     <Svg.FolderPicture theme={props.$store.theme} />
                   </TouchableOpacity>
